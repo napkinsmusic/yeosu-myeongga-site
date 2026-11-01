@@ -10,8 +10,7 @@
   --line: #e6e6e6;
   --dark: #161616;
   --max: 1560px;
-  /* 비디오처럼 창 너비·높이 어느 쪽을 바꿔도 비율대로 같이 변합니다. */
-  --logo-w: min(73.6vw, 14.4vw + 11.2vh);
+  --logo-w: min(73.6vw, 14.4vw + 11.2svh);
   --logo-h: calc(var(--logo-w) / 3);
   --header-pad: max(12px, 1.6vh);
   --header-h: calc(var(--logo-h) + var(--header-pad) + 8px);
@@ -27,7 +26,10 @@ html {
 
 body {
   margin: 0;
+  min-height: 100svh;
   background: var(--bg);
+  container-name: site;
+  container-type: inline-size;
   color: var(--text);
   font-family:
     Pretendard, "Noto Sans KR", "Apple SD Gothic Neo",
@@ -124,7 +126,8 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 
 .hero {
   position: relative;
-  min-height: 100svh;
+  width: 100%;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: #151515;
 }
@@ -147,7 +150,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   z-index: 2;
   left: 50%;
   bottom: 5.5vh;
-  width: min(96vw, 1240px);
+  width: min(94vw, 100%);
   transform: translateX(-50%);
   color: #fff;
   text-align: center;
@@ -155,10 +158,11 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 
 .hero-copy h1 {
   margin: 0;
-  font-size: calc(1.2 * 1.2 * 1.2 * clamp(19px, 2.5vw, 28px));
+  font-size: min(26px, 4.15vw);
   font-weight: 400;
-  letter-spacing: -0.02em;
-  line-height: 1.7;
+  letter-spacing: -0.03em;
+  line-height: 1.45;
+  word-break: keep-all;
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.45);
 }
 
@@ -188,9 +192,9 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 
 #signature-products,
 #all-products {
-  width: calc(100% - clamp(28px, 4vw, 80px));
-  padding-top: clamp(40px, 4vw, 64px);
-  padding-bottom: clamp(60px, 6vw, 102px);
+  width: calc(100% - clamp(28px, 4cqw, 80px));
+  padding-top: clamp(40px, 4cqw, 64px);
+  padding-bottom: clamp(60px, 6cqw, 102px);
 }
 
 .thanks-banner {
@@ -204,13 +208,13 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 .centennial-certificate {
   display: flex;
   justify-content: center;
-  gap: clamp(8px, 2vw, 32px);
-  padding: clamp(64px, 8vw, 128px) 24px;
+  gap: clamp(8px, 2cqw, 32px);
+  padding: clamp(64px, 8cqw, 128px) 24px;
   background: #fff;
 }
 
 .centennial-certificate img {
-  width: min(calc((100% - 2 * clamp(8px, 2vw, 32px)) / 3), 480px);
+  width: min(calc((100% - 2 * clamp(8px, 2cqw, 32px)) / 3), 480px);
   height: auto;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
 }
@@ -228,10 +232,10 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   left: 50%;
   width: 100%;
   margin: 0;
-  padding: 0 2vw;
+  padding: 0 2cqw;
   transform: translate(-50%, -50%);
   color: #111;
-  font-size: clamp(14px, 4vw, 102px);
+  font-size: clamp(14px, 4.6cqw, 28px);
   font-weight: 400;
   line-height: 1.2;
   letter-spacing: -0.03em;
@@ -255,9 +259,9 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 .thanks-banner .thanks-logo {
   position: absolute;
   left: 50%;
-  bottom: clamp(6px, 1vw, 18px);
+  bottom: clamp(6px, 1cqw, 18px);
   display: block;
-  width: min(58.8vw, 602px);
+  width: min(58.8cqw, 320px);
   height: auto;
   transform: translateX(-50%);
 }
@@ -275,7 +279,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 .location-copy h2,
 .brand-visual-copy h2 {
   margin: 8px 0 0;
-  font-size: clamp(28px, 3vw, 48px);
+  font-size: clamp(28px, 3cqw, 48px);
   font-weight: 300;
   letter-spacing: -0.045em;
   line-height: 1.15;
@@ -343,8 +347,8 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 .product-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: clamp(8px, 1vw, 20px);
-  row-gap: clamp(60px, 6vw, 102px);
+  column-gap: clamp(8px, 1cqw, 20px);
+  row-gap: clamp(60px, 6cqw, 102px);
 }
 
 .product-card,
@@ -374,7 +378,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 
 .category-product-heading h3 {
   margin: 0;
-  font-size: clamp(24px, 2.2vw, 34px);
+  font-size: clamp(24px, 2.2cqw, 34px);
   font-weight: 300;
   letter-spacing: -0.04em;
 }
@@ -434,8 +438,8 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 .product-carousel {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 3 * clamp(8px, 1vw, 20px)) / 4);
-  gap: clamp(8px, 1vw, 20px);
+  grid-auto-columns: calc((100% - 3 * clamp(8px, 1cqw, 20px)) / 4);
+  gap: clamp(8px, 1cqw, 20px);
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   scroll-snap-type: inline mandatory;
@@ -633,7 +637,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 9vw 7vw;
+  padding: 9cqw 7cqw;
 }
 
 .about-copy p:not(.eyebrow) {
@@ -650,7 +654,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 }
 
 .location-copy {
-  padding: 110px max(6vw, 32px);
+  padding: 72px max(6cqw, 24px);
 }
 
 .location-copy p {
@@ -673,7 +677,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 }
 
 .site-footer {
-  padding: 72px max(5vw, 36px) 42px;
+  padding: 72px max(5cqw, 24px) 42px;
   background: var(--dark);
   color: #fff;
 }
