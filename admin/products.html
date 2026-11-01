@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>상품관리 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/admin-products.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-loading" data-admin-loading><p>관리자 권한을 확인하고 있습니다.</p></div>
+
+  <div class="admin-layout" data-admin-content hidden>
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-head">
+        <a href="./index.html">여수명가</a>
+        <button type="button" aria-label="관리 메뉴 닫기" data-admin-menu-close>×</button>
+      </div>
+      <p class="admin-sidebar-label">ADMIN</p>
+      <nav aria-label="관리자 메뉴">
+        <a href="./index.html">대시보드</a>
+        <a href="./orders.html">주문관리</a>
+        <a class="is-active" href="./products.html">상품관리</a>
+        <a href="./inventory.html">재고관리</a>
+        <a href="./shipping.html" data-future-menu>배송관리</a>
+        <a href="./customers.html" data-future-menu>고객관리</a>
+        <a href="./sales.html">매출통계</a>
+        <a href="./settings.html" data-future-menu>설정</a>
+      </nav>
+      <button class="admin-logout" type="button" data-admin-logout>로그아웃</button>
+    </aside>
+
+    <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-menu-button" type="button" aria-label="관리 메뉴 열기" data-admin-menu-open>☰</button>
+        <div><strong>관리자</strong><span data-admin-email></span></div>
+      </header>
+
+      <section class="admin-content">
+        <div class="admin-heading-actions">
+          <div class="admin-page-heading">
+            <p class="admin-kicker">PRODUCTS</p>
+            <h1>상품관리</h1>
+          </div>
+          <div>
+            <button class="admin-secondary-button" type="button" data-import-products>기존 상품 가져오기</button>
+            <button class="admin-primary-button" type="button" data-new-product>새 상품 등록</button>
+          </div>
+        </div>
+
+        <div class="product-admin-toolbar">
+          <input type="search" placeholder="상품명 또는 상품코드 검색" data-product-search />
+          <label><input type="checkbox" data-show-hidden /> 숨김 상품 포함</label>
+        </div>
+
+        <div class="admin-table-wrap product-table-wrap">
+          <table class="admin-product-table">
+            <thead>
+              <tr>
+                <th>순서</th><th>상품사진</th><th>상품명</th><th>카테고리</th>
+                <th>판매가격</th><th>정상가격</th><th>재고</th><th>판매상태</th>
+                <th>노출상태</th><th>등록일</th><th>관리</th>
+              </tr>
+            </thead>
+            <tbody data-product-rows></tbody>
+          </table>
+          <div class="admin-table-loading" data-product-loading>상품을 불러오고 있습니다.</div>
+          <div class="admin-table-empty" data-product-empty hidden>등록된 상품이 없습니다.</div>
+        </div>
+        <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="product-editor-backdrop" data-product-editor-backdrop></div>
+  <aside class="product-editor" aria-hidden="true" data-product-editor>
+    <header>
+      <div><span>PRODUCT</span><h2 data-editor-title>새 상품 등록</h2></div>
+      <button type="button" aria-label="상품 편집 닫기" data-editor-close>×</button>
+    </header>
+
+    <form data-product-form>
+      <input type="hidden" name="productId" />
+      <input type="hidden" name="thumbnail" />
+      <input type="hidden" name="existingImages" />
+
+      <section class="editor-section">
+        <h3>기본정보</h3>
+        <div class="editor-grid">
+          <label><span>상품명</span><input name="name" type="text" required /></label>
+          <label><span>상품코드</span><input name="productCode" type="text" required /></label>
+          <label>
+            <span>카테고리</span>
+            <select name="category" required>
+              <option value="gajang">게장</option><option value="jeonbok">전복</option>
+              <option value="kimchi">갓김치</option><option value="fish">굴비·생선</option>
+              <option value="jeotgal">젓갈</option><option value="gift-set">선물세트</option>
+            </select>
+          </label>
+          <label><span>노출순서</span><input name="displayOrder" type="number" min="0" required /></label>
+          <label class="editor-wide"><span>간단설명</span><textarea name="shortDescription" rows="2"></textarea></label>
+          <label class="editor-wide"><span>상세설명</span><textarea name="description" rows="6"></textarea></label>
+        </div>
+      </section>
+
+      <section class="editor-section">
+        <h3>상품 이미지</h3>
+        <div class="editor-grid">
+          <label><span>대표사진</span><input name="thumbnailFile" type="file" accept="image/*" /></label>
+          <label><span>추가사진 (최대 10장)</span><input name="imageFiles" type="file" accept="image/*" multiple /></label>
+        </div>
+        <div class="product-image-preview" data-image-preview></div>
+        <p class="editor-help">이미지는 Firebase Storage에 업로드됩니다. 파일당 최대 10MB입니다.</p>
+      </section>
+
+      <section class="editor-section">
+        <h3>가격·재고</h3>
+        <div class="editor-grid">
+          <label><span>정상가격</span><input name="originalPrice" type="number" min="0" required /></label>
+          <label><span>판매가격</span><input name="price" type="number" min="0" required /></label>
+          <label><span>할인가격</span><input name="salePrice" type="number" min="0" /></label>
+          <label><span>현재재고</span><input name="stock" type="number" min="0" required /></label>
+          <label><span>배송비</span><input name="shippingFee" type="number" min="0" required /></label>
+        </div>
+      </section>
+
+      <section class="editor-section">
+        <h3>제조·보관정보</h3>
+        <div class="editor-grid">
+          <label><span>원산지</span><input name="origin" type="text" /></label>
+          <label><span>제조사</span><input name="manufacturer" type="text" /></label>
+          <label class="editor-wide"><span>보관방법</span><textarea name="storageMethod" rows="3"></textarea></label>
+        </div>
+      </section>
+
+      <section class="editor-section">
+        <h3>상품정보고시</h3>
+        <div class="editor-grid">
+          <label><span>식품의 유형</span><input name="foodType" type="text" /></label>
+          <label><span>내용량</span><input name="content" type="text" /></label>
+          <label class="editor-wide"><span>원재료명</span><textarea name="ingredients" rows="3"></textarea></label>
+          <label><span>소비기한</span><input name="expiration" type="text" /></label>
+          <label><span>포장재질</span><input name="packagingMaterial" type="text" /></label>
+          <label class="editor-wide"><span>영양정보</span><textarea name="nutrition" rows="3"></textarea></label>
+          <label class="editor-wide"><span>소비자 안전 주의사항</span><textarea name="consumerSafetyNotice" rows="3"></textarea></label>
+          <label><span>상담 연락처</span><input name="customerServicePhone" type="text" value="010 3353 2724" /></label>
+        </div>
+      </section>
+
+      <section class="editor-section editor-options">
+        <h3>판매 설정</h3>
+        <label><input name="isFeatured" type="checkbox" /> 메인 노출</label>
+        <label><input name="isVisible" type="checkbox" checked /> 판매·노출</label>
+        <label><input name="isSoldOut" type="checkbox" /> 품절 표시</label>
+      </section>
+
+      <footer class="editor-actions">
+        <button class="admin-secondary-button" type="button" data-editor-cancel>취소</button>
+        <button class="admin-primary-button" type="submit">저장</button>
+        <p role="status" aria-live="polite" data-editor-message></p>
+      </footer>
+    </form>
+  </aside>
+
+  <script src="../js/products.js"></script>
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/services/admin-product-service.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-products.js"></script>
+</body>
+</html>

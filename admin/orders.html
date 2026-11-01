@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>주문관리 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/admin-orders.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-loading" data-admin-loading>
+    <p>관리자 권한을 확인하고 있습니다.</p>
+  </div>
+
+  <div class="admin-layout" data-admin-content hidden>
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-head">
+        <a href="./index.html">여수명가</a>
+        <button type="button" aria-label="관리 메뉴 닫기" data-admin-menu-close>×</button>
+      </div>
+      <p class="admin-sidebar-label">ADMIN</p>
+      <nav aria-label="관리자 메뉴">
+        <a href="./index.html">대시보드</a>
+        <a class="is-active" href="./orders.html">주문관리</a>
+        <a href="./products.html">상품관리</a>
+        <a href="./inventory.html">재고관리</a>
+        <a href="./shipping.html" data-future-menu>배송관리</a>
+        <a href="./customers.html" data-future-menu>고객관리</a>
+        <a href="./sales.html">매출통계</a>
+        <a href="./settings.html" data-future-menu>설정</a>
+      </nav>
+      <button class="admin-logout" type="button" data-admin-logout>로그아웃</button>
+    </aside>
+
+    <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-menu-button" type="button" aria-label="관리 메뉴 열기" data-admin-menu-open>☰</button>
+        <div><strong>관리자</strong><span data-admin-email></span></div>
+      </header>
+
+      <section class="admin-content admin-orders-content">
+        <div class="admin-page-heading">
+          <p class="admin-kicker">ORDERS</p>
+          <h1>주문관리</h1>
+        </div>
+
+        <form class="order-filters" data-order-filters>
+          <div class="filter-group">
+            <span>기간</span>
+            <div class="quick-periods">
+              <button type="button" data-period="today">오늘</button>
+              <button type="button" data-period="yesterday">어제</button>
+              <button type="button" data-period="7">최근 7일</button>
+              <button type="button" data-period="30">최근 30일</button>
+            </div>
+            <div class="date-range">
+              <input type="date" name="startDate" aria-label="조회 시작일" />
+              <span>~</span>
+              <input type="date" name="endDate" aria-label="조회 종료일" />
+            </div>
+          </div>
+
+          <div class="filter-group filter-row">
+            <label>
+              <span>상태</span>
+              <select name="status">
+                <option value="">전체</option>
+                <option value="PAID">결제완료</option>
+                <option value="PREPARING">배송준비</option>
+                <option value="SHIPPED">배송중</option>
+                <option value="DELIVERED">배송완료</option>
+                <option value="CANCEL">취소</option>
+                <option value="REFUND">환불</option>
+              </select>
+            </label>
+            <label class="search-type">
+              <span>검색</span>
+              <select name="searchType">
+                <option value="all">통합검색</option>
+                <option value="orderNumber">주문번호</option>
+                <option value="customerName">주문자</option>
+                <option value="phone">전화번호</option>
+                <option value="productName">상품명</option>
+              </select>
+            </label>
+            <label class="search-keyword">
+              <span class="visually-hidden">검색어</span>
+              <input name="keyword" type="search" placeholder="검색어 입력" />
+            </label>
+            <button class="filter-submit" type="submit">조회</button>
+          </div>
+        </form>
+
+        <div class="order-list-toolbar">
+          <p>조회 결과 <strong data-order-count>0</strong>건</p>
+          <button type="button" data-download-csv>CSV 다운로드</button>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-order-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" aria-label="전체 주문 선택" data-order-select-all /></th>
+                <th>주문번호</th>
+                <th>주문일</th>
+                <th>주문자</th>
+                <th>연락처</th>
+                <th>상품</th>
+                <th>수량</th>
+                <th>결제금액</th>
+                <th>결제방법</th>
+                <th>주문상태</th>
+                <th>배송상태</th>
+              </tr>
+            </thead>
+            <tbody data-order-rows></tbody>
+          </table>
+          <div class="admin-table-empty" data-order-empty hidden>조회된 주문이 없습니다.</div>
+          <div class="admin-table-loading" data-order-loading>주문을 불러오고 있습니다.</div>
+        </div>
+        <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
+      </section>
+    </main>
+  </div>
+
+  <div class="order-drawer-backdrop" data-order-drawer-backdrop></div>
+  <aside class="order-drawer" aria-hidden="true" data-order-drawer>
+    <header>
+      <div><span>ORDER DETAIL</span><h2 data-detail-order-number>주문 상세</h2></div>
+      <button type="button" aria-label="주문 상세 닫기" data-order-drawer-close>×</button>
+    </header>
+    <div class="order-drawer-body" data-order-detail></div>
+    <footer class="order-status-editor" data-status-editor hidden>
+      <label>
+        <span>다음 상태</span>
+        <select data-next-status></select>
+      </label>
+      <div class="shipping-inputs" data-shipping-inputs hidden>
+        <label><span>택배사</span><select data-courier></select></label>
+        <label><span>송장번호</span><input type="text" data-tracking-number /></label>
+      </div>
+      <button type="button" data-save-status>상태 변경 저장</button>
+      <p role="status" aria-live="polite" data-status-message></p>
+    </footer>
+  </aside>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/services/admin-order-service.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-orders.js"></script>
+</body>
+</html>

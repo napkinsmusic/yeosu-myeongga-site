@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>관리자 로그인 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="admin-login-page">
+  <main class="admin-login-card">
+    <a class="admin-login-brand" href="../index.html">여수명가</a>
+    <p class="admin-kicker">ADMIN</p>
+    <h1>관리자 로그인</h1>
+    <p class="admin-login-description">허가된 관리자 계정만 접근할 수 있습니다.</p>
+
+    <form data-admin-login-form>
+      <label>
+        <span>이메일</span>
+        <input name="email" type="email" autocomplete="username" required />
+      </label>
+      <label>
+        <span>비밀번호</span>
+        <input name="password" type="password" autocomplete="current-password" required />
+      </label>
+      <button type="submit">로그인</button>
+      <p class="admin-form-message" role="alert" aria-live="polite" data-login-message></p>
+    </form>
+
+    <a class="admin-back-link" href="../index.html">← 쇼핑몰로 돌아가기</a>
+  </main>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/admin-login.js"></script>
+</body>
+</html>

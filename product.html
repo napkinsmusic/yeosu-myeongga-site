@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="여수명가 상품 상세정보" />
+  <title>상품 상세 | 여수명가</title>
+  <link rel="stylesheet" href="./css/style.css" />
+  <link rel="stylesheet" href="./css/product.css" />
+</head>
+<body class="subpage">
+  <header class="site-header centered-header" id="top">
+    <a class="brand-logo" href="./index.html">
+      <img src="./assets/images/logo.png" alt="여수명가" />
+    </a>
+  </header>
+
+  <main class="product-page" data-product-page>
+    <section class="product-not-found" data-product-error hidden>
+      <p class="eyebrow">PRODUCT</p>
+      <h1>상품을 찾을 수 없습니다.</h1>
+      <p>판매가 종료되었거나 올바르지 않은 상품 주소입니다.</p>
+      <a class="outline-button" href="./index.html#all-products">전체 상품 보기</a>
+    </section>
+
+    <div data-product-content hidden>
+      <section class="product-overview">
+        <div class="product-gallery">
+          <div
+            class="product-post"
+            data-product-post
+            tabindex="0"
+            aria-roledescription="캐러셀"
+            aria-label="상품 포스팅"
+          >
+            <div class="product-post-track" data-product-post-track></div>
+            <button class="product-post-arrow prev" type="button" data-post-prev aria-label="이전 장" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M14.5 5.5 8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <button class="product-post-arrow next" type="button" data-post-next aria-label="다음 장" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M9.5 5.5 16 12l-6.5 6.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+            <div class="product-post-dots" data-product-post-dots hidden></div>
+          </div>
+        </div>
+
+        <div class="product-purchase">
+          <p class="eyebrow" data-product-category></p>
+          <h1 data-product-name></h1>
+          <p class="product-short-description" data-product-short-description></p>
+
+          <div class="product-price" data-product-price></div>
+
+          <div class="option-field" data-product-options hidden>
+            <label for="product-option">필수 선택</label>
+            <select id="product-option" data-product-option required aria-required="true">
+              <option value="">선택해 주세요</option>
+            </select>
+          </div>
+
+          <div class="quantity-field">
+            <span>수량</span>
+            <div class="quantity-control">
+              <button type="button" aria-label="수량 줄이기" data-quantity-minus>−</button>
+              <input type="number" value="1" min="1" inputmode="numeric" aria-label="상품 수량" data-quantity />
+              <button type="button" aria-label="수량 늘리기" data-quantity-plus>+</button>
+            </div>
+          </div>
+
+          <div class="product-total">
+            <div class="product-shipping-status" data-product-shipping-status hidden>
+              <span>배송비</span>
+              <strong data-product-shipping-fee></strong>
+            </div>
+            <div class="product-total-amount">
+              <span>총 상품금액</span>
+              <strong data-product-total></strong>
+            </div>
+          </div>
+
+          <dl class="product-meta">
+            <div>
+              <dt>배송비</dt>
+              <dd data-product-shipping></dd>
+            </div>
+            <div data-pollack-roe-shipping-method hidden>
+              <dt>배송방법 및 예상 배송기간</dt>
+              <dd>아이스박스 신선택배 / 결제 완료 후 1~2일 이내 출고 (주말·공휴일 제외)</dd>
+            </div>
+          </dl>
+
+          <p class="product-stock-message" data-stock-message hidden></p>
+
+          <div class="purchase-actions">
+            <button class="purchase-button primary purchase-main" type="button" data-buy-now>결제하기</button>
+            <button class="purchase-button kakao" type="button" data-kakao-order>카카오톡으로 주문하기</button>
+          </div>
+          <p class="action-message" role="status" aria-live="polite" data-action-message></p>
+        </div>
+      </section>
+
+      <section class="product-details">
+        <article class="detail-section">
+          <h2>식품 보관방법</h2>
+          <p data-product-storage></p>
+        </article>
+
+        <article class="detail-section detail-images">
+          <h2 class="visually-hidden">상품 상세 이미지</h2>
+          <div data-product-detail-images></div>
+        </article>
+
+        <article class="detail-section">
+          <h2>교환 / 반품 안내</h2>
+          <p>식품의 특성상 단순 변심에 의한 교환·반품은 제한될 수 있습니다. 단, 상품 불량이나 오배송의 경우 교환·환불해 드립니다. 문제가 있을 경우 상품 수령 후 즉시 <a href="tel:01033532724">010-3353-2724</a> 으로 연락해 주세요.</p>
+        </article>
+
+        <div class="product-info-more">
+          <button
+            class="product-info-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="product-info-panel"
+            data-product-info-toggle
+          >
+            <span data-product-info-label>상품정보 더보기</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M6 9.5 12 15.5 18 9.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <div id="product-info-panel" class="product-info-panel" data-product-info-panel hidden>
+        <article class="detail-section" data-standard-product-info>
+          <h2>상품정보</h2>
+          <dl class="product-notice" data-product-info></dl>
+        </article>
+
+        <article class="detail-section temporary-product-notice" data-pollack-roe-notice hidden>
+          <section class="notice-group">
+            <h2>수산물·식품 품목별 정보고시</h2>
+            <dl class="temporary-notice-list">
+              <div>
+                <dt>원산지</dt>
+                <dd>꽃게(국산/서해안), 혼합간장[탈지대두(외국산: 미국, 인도, 중국)], 마늘(국산), 생강(국산), 청양고추(국산)</dd>
+              </div>
+              <div>
+                <dt>식품의 유형</dt>
+                <dd>절임식품 (또는 수산물가공품)</dd>
+              </div>
+              <div>
+                <dt>제조사 (업소명 및 소재지)</dt>
+                <dd>(주)전남산업콘텐츠연구원 / 전라남도 여수시 00길 00</dd>
+              </div>
+              <div>
+                <dt>제조연월일 및 소비기한</dt>
+                <dd>주문 접수 후 상시 제조 (용기 별도 표기) / 제조일로부터 냉장 보관 시 10일까지</dd>
+              </div>
+              <div>
+                <dt>내용량</dt>
+                <dd>2kg (꽃게 3~4마리 / 원물 및 양념장 포함)</dd>
+              </div>
+              <div>
+                <dt>원재료명 및 함량</dt>
+                <dd>꽃게(국산) 50%, 간장소스 50% [혼합간장{탈지대두(외국산), 천일염(소주산)}, 정제수, 물엿, 마늘(국산), 생강(국산), 감초]</dd>
+              </div>
+              <div>
+                <dt>알레르기 유발물질</dt>
+                <dd>게, 대두, 밀 함유</dd>
+              </div>
+              <div>
+                <dt>보관방법 및 취급방법</dt>
+                <dd>
+                  수령 즉시 냉장 보관(0~5℃) / 개봉 후 빠른 소비 권장<br />
+                  (장기 보관 시 게와 간장을 분리하여 게는 냉동, 간장은 끓여서 냉장 보관)
+                </dd>
+              </div>
+              <div>
+                <dt>영양성분</dt>
+                <dd>해당 없음 (영양성분 표시 면제 대상 식품)</dd>
+              </div>
+              <div>
+                <dt>유전자변형식품 여부</dt>
+                <dd>해당 없음</dd>
+              </div>
+              <div>
+                <dt>소비자안전 주의사항</dt>
+                <dd>
+                  본 제품은 알레르기 유발물질(게, 대두, 밀)을 사용한 제품과 같은 제조 시설에서 제조하고 있습니다.<br />
+                  게 껍질이 딱딱하므로 섭취 시 치아 손상 및 입안 상처에 주의하십시오.
+                </dd>
+              </div>
+              <div>
+                <dt>수입신고 여부</dt>
+                <dd>
+                  해당 없음<br />
+                  (국산 원물 사용 / 수입 원료 사용 시 '식품위생법에 따른 수입신고를 필함')
+                </dd>
+              </div>
+            </dl>
+          </section>
+        </article>
+          </div>
+        </div>
+
+        <article class="detail-section">
+          <h2>고객문의 안내</h2>
+          <p>상품 및 배송 관련 문의: <a href="tel:01033532724">010 3353 2724</a></p>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <div class="mobile-purchase-bar" data-mobile-purchase hidden>
+    <div class="mobile-purchase-actions">
+      <button class="purchase-button primary purchase-main" type="button" data-mobile-buy>결제하기</button>
+      <button class="purchase-button kakao" type="button" data-mobile-kakao>카카오톡으로 주문하기</button>
+    </div>
+  </div>
+
+  <div class="payment-soon-modal" aria-hidden="true" data-payment-modal>
+    <div class="payment-soon-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-soon-title">
+      <button class="sms-modal-close" type="button" aria-label="결제 안내 닫기" data-payment-close>×</button>
+      <h2 id="payment-soon-title" class="visually-hidden">결제 안내</h2>
+      <img src="./assets/images/payment-soon.png?v=2" alt="결제 방법 안내" data-payment-image />
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div>
+      <a class="footer-brand" href="./index.html">여수명가</a>
+      <p>상호: (주)전남산업콘텐츠연구원</p>
+      <p>대표자: 유란</p>
+      <p>사업자등록번호: 000-00-00000</p>
+      <p>통신판매업신고번호: 제2026-여수-0000호</p>
+      <p>영업소 소재지: 전라남도 여수시 00길 00</p>
+    </div>
+    <p class="copyright">© YEOSU MYEONGGA. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/products.js"></script>
+  <script src="./js/store-config.js"></script>
+  <script src="./js/firebase/firebase-config.js"></script>
+  <script src="./js/services/product-service.js"></script>
+  <script src="./js/purchase-service.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/product.js"></script>
+</body>
+</html>

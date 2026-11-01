@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>재고관리 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/admin-products.css" />
+  <link rel="stylesheet" href="../css/admin-inventory.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-loading" data-admin-loading><p>관리자 권한을 확인하고 있습니다.</p></div>
+
+  <div class="admin-layout" data-admin-content hidden>
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-head">
+        <a href="./index.html">여수명가</a>
+        <button type="button" aria-label="관리 메뉴 닫기" data-admin-menu-close>×</button>
+      </div>
+      <p class="admin-sidebar-label">ADMIN</p>
+      <nav aria-label="관리자 메뉴">
+        <a href="./index.html">대시보드</a>
+        <a href="./orders.html">주문관리</a>
+        <a href="./products.html">상품관리</a>
+        <a class="is-active" href="./inventory.html">재고관리</a>
+        <a href="./shipping.html" data-future-menu>배송관리</a>
+        <a href="./customers.html" data-future-menu>고객관리</a>
+        <a href="./sales.html">매출통계</a>
+        <a href="./settings.html" data-future-menu>설정</a>
+      </nav>
+      <button class="admin-logout" type="button" data-admin-logout>로그아웃</button>
+    </aside>
+
+    <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-menu-button" type="button" aria-label="관리 메뉴 열기" data-admin-menu-open>☰</button>
+        <div><strong>관리자</strong><span data-admin-email></span></div>
+      </header>
+
+      <section class="admin-content">
+        <div class="admin-page-heading">
+          <p class="admin-kicker">INVENTORY</p>
+          <h1>재고관리</h1>
+        </div>
+
+        <form class="inventory-settings" data-inventory-settings>
+          <div>
+            <strong>재고 부족 기준</strong>
+            <p>현재재고가 설정값 이하이면 재고 부족으로 표시합니다.</p>
+          </div>
+          <label>
+            <input name="lowStockThreshold" type="number" min="1" required />
+            <span>개 이하</span>
+          </label>
+          <button class="admin-primary-button" type="submit">기준 저장</button>
+        </form>
+
+        <div class="product-admin-toolbar">
+          <input type="search" placeholder="상품명 검색" data-inventory-search />
+          <label><input type="checkbox" data-low-stock-only /> 재고 부족만 보기</label>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-inventory-table">
+            <thead>
+              <tr><th>상품</th><th>현재재고</th><th>누적판매</th><th>재고상태</th><th>재고수정</th></tr>
+            </thead>
+            <tbody data-inventory-rows></tbody>
+          </table>
+          <div class="admin-table-loading" data-inventory-loading>재고를 불러오고 있습니다.</div>
+          <div class="admin-table-empty" data-inventory-empty hidden>표시할 상품이 없습니다.</div>
+        </div>
+        <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/services/admin-product-service.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-inventory.js"></script>
+</body>
+</html>

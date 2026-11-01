@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>관리자 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-loading" data-admin-loading>
+    <p>관리자 권한을 확인하고 있습니다.</p>
+  </div>
+
+  <div class="admin-layout" data-admin-content hidden>
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-head">
+        <a href="./index.html">여수명가</a>
+        <button type="button" aria-label="관리 메뉴 닫기" data-admin-menu-close>×</button>
+      </div>
+      <p class="admin-sidebar-label">ADMIN</p>
+      <nav aria-label="관리자 메뉴">
+        <a class="is-active" href="./index.html">대시보드</a>
+        <a href="./orders.html">주문관리</a>
+        <a href="./products.html">상품관리</a>
+        <a href="./inventory.html">재고관리</a>
+        <a href="./shipping.html" data-future-menu>배송관리</a>
+        <a href="./customers.html" data-future-menu>고객관리</a>
+        <a href="./sales.html">매출통계</a>
+        <a href="./settings.html" data-future-menu>설정</a>
+      </nav>
+      <button class="admin-logout" type="button" data-admin-logout>로그아웃</button>
+    </aside>
+
+    <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-menu-button" type="button" aria-label="관리 메뉴 열기" data-admin-menu-open>☰</button>
+        <div>
+          <strong>관리자</strong>
+          <span data-admin-email></span>
+        </div>
+      </header>
+
+      <section class="admin-content">
+        <div class="admin-page-heading">
+          <p class="admin-kicker">DASHBOARD</p>
+          <h1>대시보드</h1>
+        </div>
+
+        <div class="admin-notice" data-dashboard-loading>
+          <strong>대시보드 데이터를 불러오고 있습니다.</strong>
+          <p>잠시만 기다려 주세요.</p>
+        </div>
+
+        <div class="admin-placeholder-grid" aria-label="대시보드 준비 항목">
+          <article><span>오늘 주문수</span><strong data-today-orders>—</strong></article>
+          <article><span>오늘 결제금액</span><strong data-today-revenue>—</strong></article>
+          <article><span>배송 준비 주문</span><strong data-preparing-orders>—</strong></article>
+          <article><span>배송중 주문</span><strong data-shipped-orders>—</strong></article>
+        </div>
+
+        <div class="admin-summary-grid">
+          <article>
+            <h2>최근 7일</h2>
+            <dl>
+              <div><dt>매출액</dt><dd data-week-revenue>—</dd></div>
+              <div><dt>주문건수</dt><dd data-week-orders>—</dd></div>
+            </dl>
+          </article>
+          <article>
+            <h2>전체</h2>
+            <dl>
+              <div><dt>누적 매출</dt><dd data-total-revenue>—</dd></div>
+              <div><dt>누적 주문</dt><dd data-total-orders>—</dd></div>
+            </dl>
+          </article>
+        </div>
+
+        <div class="admin-dashboard-columns">
+          <section class="admin-dashboard-panel dashboard-wide-panel">
+            <h2>가장 많이 팔린 상품 TOP 5</h2>
+            <div class="dashboard-list" data-top-products></div>
+          </section>
+          <section class="admin-dashboard-panel dashboard-wide-panel">
+            <div class="dashboard-panel-head">
+              <h2>최근 주문</h2>
+              <a href="./orders.html">전체보기</a>
+            </div>
+            <div class="dashboard-table-wrap">
+              <table class="dashboard-order-table">
+                <thead>
+                  <tr>
+                    <th>주문번호</th><th>주문자</th><th>상품</th><th>수량</th>
+                    <th>결제금액</th><th>결제상태</th><th>배송상태</th><th>주문시간</th>
+                  </tr>
+                </thead>
+                <tbody data-recent-orders></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/services/admin-order-service.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-dashboard.js"></script>
+</body>
+</html>

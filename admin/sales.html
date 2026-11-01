@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>매출통계 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/admin-sales.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-loading" data-admin-loading><p>관리자 권한을 확인하고 있습니다.</p></div>
+
+  <div class="admin-layout" data-admin-content hidden>
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-head">
+        <a href="./index.html">여수명가</a>
+        <button type="button" aria-label="관리 메뉴 닫기" data-admin-menu-close>×</button>
+      </div>
+      <p class="admin-sidebar-label">ADMIN</p>
+      <nav aria-label="관리자 메뉴">
+        <a href="./index.html">대시보드</a>
+        <a href="./orders.html">주문관리</a>
+        <a href="./products.html">상품관리</a>
+        <a href="./inventory.html">재고관리</a>
+        <a href="./shipping.html" data-future-menu>배송관리</a>
+        <a href="./customers.html" data-future-menu>고객관리</a>
+        <a class="is-active" href="./sales.html">매출통계</a>
+        <a href="./settings.html" data-future-menu>설정</a>
+      </nav>
+      <button class="admin-logout" type="button" data-admin-logout>로그아웃</button>
+    </aside>
+
+    <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-menu-button" type="button" aria-label="관리 메뉴 열기" data-admin-menu-open>☰</button>
+        <div><strong>관리자</strong><span data-admin-email></span></div>
+      </header>
+
+      <section class="admin-content">
+        <div class="admin-page-heading">
+          <p class="admin-kicker">SALES</p>
+          <h1>매출통계</h1>
+        </div>
+
+        <form class="sales-period-filter" data-sales-filter>
+          <div class="sales-quick-periods">
+            <button type="button" data-sales-period="today">오늘</button>
+            <button type="button" data-sales-period="week">이번주</button>
+            <button type="button" data-sales-period="month">이번달</button>
+          </div>
+          <div class="sales-date-range">
+            <input type="date" name="startDate" aria-label="통계 시작일" required />
+            <span>~</span>
+            <input type="date" name="endDate" aria-label="통계 종료일" required />
+            <button type="submit">조회</button>
+          </div>
+        </form>
+
+        <div class="sales-metrics">
+          <article><span>총 매출</span><strong data-sales-revenue>—</strong></article>
+          <article><span>주문건수</span><strong data-sales-orders>—</strong></article>
+          <article><span>판매상품수</span><strong data-sales-products>—</strong></article>
+          <article><span>평균 주문금액</span><strong data-sales-average>—</strong></article>
+        </div>
+
+        <div class="test-sales-notice" data-test-sales hidden>
+          <strong>TEST 주문은 실제 매출에서 제외됩니다.</strong>
+          <span data-test-sales-summary></span>
+        </div>
+
+        <section class="sales-panel">
+          <h2>일별 매출</h2>
+          <div class="sales-chart" data-sales-chart></div>
+        </section>
+
+        <section class="sales-panel">
+          <h2>상품별 매출</h2>
+          <div class="sales-table-wrap">
+            <table class="sales-product-table">
+              <thead><tr><th>상품명</th><th>판매수량</th><th>매출</th></tr></thead>
+              <tbody data-sales-products-table></tbody>
+            </table>
+            <div class="sales-empty" data-sales-products-empty hidden>해당 기간의 판매 데이터가 없습니다.</div>
+          </div>
+        </section>
+
+        <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
+      </section>
+    </main>
+  </div>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/services/admin-sales-service.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-sales.js"></script>
+</body>
+</html>

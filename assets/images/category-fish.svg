@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="1000" viewBox="0 0 1000 1000">
+  <rect width="100%" height="100%" fill="#eeeae4"/>
+  <circle cx="820" cy="180" r="120" fill="#ded8cf"/>
+  <path d="M0 720 C 250 580, 600 880, 1000 660 L 1000 1000 L 0 1000 Z" fill="#d7d2ca"/>
+  <text x="50%" y="48%" text-anchor="middle" font-family="Arial, sans-serif" font-size="55" fill="#222">굴비 · 생선</text>
+  <text x="50%" y="56%" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#777">CATEGORY IMAGE</text>
+</svg>

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <rect width="100%" height="100%" fill="#eeeae4"/>
+  <circle cx="1312" cy="162" r="108" fill="#ded8cf"/>
+  <path d="M0 648 C 400 522, 960 792, 1600 594 L 1600 900 L 0 900 Z" fill="#d7d2ca"/>
+  <text x="50%" y="48%" text-anchor="middle" font-family="Arial, sans-serif" font-size="49" fill="#222">OUR STANDARD</text>
+  <text x="50%" y="56%" text-anchor="middle" font-family="Arial, sans-serif" font-size="19" fill="#777">PROCESS / FOOD / HANDS</text>
+</svg>
