@@ -1,0 +1,255 @@
+/* 모바일 주소(/m/) 전용 화면입니다. */
+.hero {
+  aspect-ratio: 9 / 16;
+}
+
+.hero-copy {
+  bottom: 4.5vh;
+  width: min(94cqw, 100%);
+}
+
+.hero-copy h1 {
+  font-size: min(20px, 4.3cqw);
+  line-height: 1.45;
+  word-break: keep-all;
+}
+
+.site-header {
+  padding-left: 18px;
+  padding-right: 18px;
+}
+
+.header-right {
+  gap: 14px;
+}
+
+.header-action,
+.icon-link {
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-grid;
+  place-items: center;
+}
+
+.section {
+  width: min(calc(100% - 28px), var(--max));
+  padding: 76px 0;
+}
+
+.product-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 8px;
+  row-gap: 60px;
+}
+
+.category-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.category-product-list {
+  gap: 62px;
+}
+
+.product-carousel {
+  grid-auto-columns: 72%;
+  gap: 10px;
+}
+
+.carousel-controls {
+  left: 4px;
+  right: 4px;
+}
+
+.carousel-controls button {
+  width: 48px;
+  height: 48px;
+}
+
+.about-section,
+.location-section {
+  grid-template-columns: 1fr;
+}
+
+.about-copy,
+.location-copy {
+  padding: 74px 24px;
+}
+
+.location-map {
+  min-height: 420px;
+  padding: 16px;
+}
+
+.store-map {
+  min-height: 390px;
+}
+
+.brand-visual {
+  min-height: 62svh;
+}
+
+.site-footer {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+input,
+select,
+textarea {
+  font-size: 16px;
+}
+
+.product-overview {
+  width: min(calc(100% - 28px), 760px);
+  padding: 8px 0 16px;
+  grid-template-columns: 1fr;
+  gap: 38px;
+}
+
+.product-post-arrow {
+  display: none;
+}
+
+.product-purchase {
+  position: static;
+}
+
+.product-purchase h1 {
+  font-size: 30px;
+}
+
+.product-details {
+  width: min(calc(100% - 40px), 760px);
+  padding-bottom: 16px;
+}
+
+.detail-section {
+  padding: 22px 0;
+}
+
+.detail-section:first-child {
+  padding-top: 16px;
+}
+
+.purchase-actions {
+  display: none;
+}
+
+.mobile-purchase-bar {
+  position: fixed;
+  z-index: 70;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: grid;
+  gap: 8px;
+  padding: 10px 14px max(10px, env(safe-area-inset-bottom));
+  border-top: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.mobile-purchase-bar .purchase-button {
+  min-height: 52px;
+  padding-right: 8px;
+  padding-left: 8px;
+  font-size: 13px;
+}
+
+.subpage .site-footer {
+  padding-bottom: 150px;
+}
+
+.option-field label {
+  font-size: 19px;
+}
+
+.option-field select {
+  min-height: 72px;
+  font-size: 19px;
+}
+
+.product-meta > div,
+.detail-definition > div,
+.product-notice > div {
+  grid-template-columns: minmax(112px, 42%) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.checkout-page {
+  width: min(calc(100% - 28px), 760px);
+  padding: 54px 0 90px;
+}
+
+.checkout-form,
+.form-grid,
+.receipt-columns {
+  grid-template-columns: 1fr;
+}
+
+.checkout-summary {
+  position: static;
+  margin: 0 -14px;
+  padding: 28px 20px;
+}
+
+.header-right .header-action {
+  display: none;
+}
+
+.form-field-wide {
+  grid-column: auto;
+}
+
+.section-title-row {
+  align-items: flex-start;
+  flex-direction: column;
+  margin-bottom: 28px;
+}
+
+.checkout-product,
+.receipt-item {
+  grid-template-columns: 76px minmax(0, 1fr);
+}
+
+.checkout-product img,
+.receipt-item img {
+  width: 76px;
+}
+
+.order-receipt {
+  width: min(calc(100% - 32px), 600px);
+}
+
+.payment-receipt {
+  max-width: none;
+}
+
+/* 컴퓨터에서 이 주소를 열어도 휴대폰 폭 그대로 보입니다. */
+:root {
+  --logo-w: min(68vw, 240px);
+}
+
+html {
+  background: #efefef;
+}
+
+body {
+  width: min(100%, 420px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.site-header,
+.mobile-purchase-bar,
+.site-messages {
+  left: 0;
+  right: 0;
+  width: min(100%, 420px);
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.site-messages {
+  width: min(360px, calc(min(100%, 420px) - 36px));
+}

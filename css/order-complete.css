@@ -173,34 +173,3 @@
   color: #fff;
 }
 
-@media (max-width: 720px) {
-  .complete-hero {
-    padding: 80px 20px 66px;
-  }
-
-  .order-receipt {
-    width: min(calc(100% - 32px), 600px);
-    padding: 58px 0 90px;
-  }
-
-  .receipt-columns {
-    grid-template-columns: 1fr;
-    gap: 0;
-  }
-
-  .receipt-item {
-    grid-template-columns: 68px minmax(0, 1fr);
-  }
-
-  .receipt-item img {
-    width: 68px;
-  }
-
-  .receipt-item strong {
-    grid-column: 2;
-  }
-
-  .payment-receipt {
-    max-width: none;
-  }
-}

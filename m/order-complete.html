@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="여수명가 주문 완료" />
+  <title>주문 완료 | 여수명가</title>
+  <link rel="stylesheet" href="../css/style.css?v=3" />
+  <link rel="stylesheet" href="../css/order-complete.css" />
+  <link rel="stylesheet" href="./css/mobile.css?v=3" />
+  <script>window.YEOSU_ASSET_ROOT = "../";</script>
+</head>
+<body class="subpage">
+  <header class="site-header">
+    <span></span>
+    <a class="brand-logo" href="./index.html">
+      <img src="../assets/images/logo.png" alt="여수명가" />
+    </a>
+    <nav class="header-right" aria-label="빠른 메뉴">
+      <a class="header-action" href="./index.html#all-products">쇼핑 계속하기</a>
+    </nav>
+  </header>
+
+  <main class="complete-page">
+    <section class="complete-loading" data-order-loading>
+      <p>주문정보를 안전하게 확인하고 있습니다.</p>
+    </section>
+
+    <section class="complete-error" data-order-error hidden>
+      <p class="eyebrow">ORDER</p>
+      <h1>주문정보를 확인할 수 없습니다.</h1>
+      <p data-order-error-message>잠시 후 다시 시도해 주세요.</p>
+      <a class="outline-button" href="./index.html">홈으로 이동</a>
+    </section>
+
+    <div data-order-content hidden>
+      <section class="complete-hero">
+        <div class="test-order-badge" data-test-order hidden>
+          TEST ORDER · 실제 결제가 아닙니다.
+        </div>
+        <p class="eyebrow">ORDER COMPLETE</p>
+        <h1>주문이 완료되었습니다.</h1>
+        <p>주문번호 <strong data-order-number></strong></p>
+        <p data-order-date></p>
+      </section>
+
+      <section class="order-receipt" id="order-summary">
+        <article class="receipt-section">
+          <h2>주문상품</h2>
+          <div class="receipt-items" data-order-items></div>
+        </article>
+
+        <div class="receipt-columns">
+          <article class="receipt-section">
+            <h2>주문자</h2>
+            <dl>
+              <div><dt>이름</dt><dd data-customer-name></dd></div>
+              <div><dt>연락처</dt><dd data-customer-phone></dd></div>
+              <div><dt>이메일</dt><dd data-customer-email></dd></div>
+            </dl>
+          </article>
+
+          <article class="receipt-section">
+            <h2>배송정보</h2>
+            <dl>
+              <div><dt>받는 사람</dt><dd data-receiver></dd></div>
+              <div><dt>연락처</dt><dd data-shipping-phone></dd></div>
+              <div><dt>주소</dt><dd data-shipping-address></dd></div>
+              <div><dt>요청사항</dt><dd data-shipping-request></dd></div>
+            </dl>
+          </article>
+        </div>
+
+        <article class="receipt-section payment-receipt">
+          <h2>결제정보</h2>
+          <dl>
+            <div><dt>상품금액</dt><dd data-receipt-products-total></dd></div>
+            <div><dt>배송비</dt><dd data-receipt-shipping></dd></div>
+            <div><dt>할인</dt><dd data-receipt-discount></dd></div>
+            <div class="receipt-total"><dt>결제금액</dt><dd data-receipt-paid></dd></div>
+            <div><dt>결제방법</dt><dd data-payment-method></dd></div>
+          </dl>
+        </article>
+
+        <div class="complete-actions">
+          <a class="complete-button secondary" href="./index.html#all-products">쇼핑 계속하기</a>
+          <a class="complete-button primary" href="#order-summary">주문 확인하기</a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a class="footer-brand" href="./index.html">여수명가</a>
+      <p>(주)전남산업콘텐츠연구원 · 대표 유란</p>
+      <p>전남 여수시 돌산읍 신추길 6</p>
+      <p>T. 010 3353 2724</p>
+    </div>
+    <p class="copyright">© YEOSU MYEONGGA. All rights reserved.</p>
+  </footer>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/order-service.js"></script>
+  <script src="../js/order-complete.js"></script>
+</body>
+</html>

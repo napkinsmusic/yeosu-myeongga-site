@@ -4,7 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>페이지를 찾을 수 없습니다 | 여수명가</title>
-  <link rel="stylesheet" href="./css/style.css?v=2">
+  <script>
+    (function () {
+      var ua = navigator.userAgent || "";
+      var touchMac = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+      var mobile = touchMac || /Android|iPhone|iPad|iPod|Mobile|IEMobile/i.test(ua);
+      if (navigator.userAgentData && navigator.userAgentData.mobile) mobile = true;
+      if (!mobile) return;
+      var file = location.pathname.split("/").filter(Boolean).pop() || "index.html";
+      if (!/\.html$/i.test(file)) file = "index.html";
+      location.replace("m/" + file + location.search + location.hash);
+    })();
+  </script>
+  <link rel="stylesheet" href="./css/style.css?v=3">
   <link rel="stylesheet" href="./css/error.css">
 </head>
 <body class="error-page">

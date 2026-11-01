@@ -177,11 +177,13 @@
 
   const uniquePaths = (paths) => paths.filter((path, index, allPaths) => path && allPaths.indexOf(path) === index);
 
+  const assetUrl = window.YEOSU_ASSET_URL || ((path) => path);
+
   async function findExistingVideo() {
     const candidates = uniquePaths([
       product.video,
-      `./assets/video/products/${product.name}.mp4`,
-      `./assets/video/products/${product.id}.mp4`,
+      assetUrl(`./assets/video/products/${product.name}.mp4`),
+      assetUrl(`./assets/video/products/${product.id}.mp4`),
     ]);
 
     for (const url of candidates) {

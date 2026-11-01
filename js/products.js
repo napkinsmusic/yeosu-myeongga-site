@@ -127,12 +127,19 @@
   ]);
   const hiddenCategoryIds = new Set(['gift-set']);
 
+  function assetUrl(path) {
+    const root = window.YEOSU_ASSET_ROOT || './';
+    return path.startsWith('./') ? root + path.slice(2) : path;
+  }
+
+  window.YEOSU_ASSET_URL = assetUrl;
+
   function namedProductImage(name) {
-    return `./assets/images/products/${name}.png`;
+    return assetUrl(`./assets/images/products/${name}.png`);
   }
 
   function namedProductVideo(name) {
-    return `./assets/video/products/${name}.mp4`;
+    return assetUrl(`./assets/video/products/${name}.mp4`);
   }
 
   let productNumber = 0;
