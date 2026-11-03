@@ -52,8 +52,37 @@
   font-size: 15.8cqw;
 }
 
+.product-info .product-name-note {
+  font-size: 0.5em;
+}
+
+.product-purchase h1 .product-name-note {
+  display: block;
+  margin-top: 0.12em;
+  font-size: 0.42em;
+  font-weight: 400;
+}
+
+.product-info .product-direct-ship {
+  display: none;
+}
+
+.product-card {
+  position: relative;
+}
+
 .popular-badge {
   animation: none;
+}
+
+.product-card .popular-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 3;
+  margin: 0;
+  padding: 0.35em 0.7em 0.4em;
+  font-size: 12px;
 }
 
 .popular-badge::before {

@@ -501,7 +501,19 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 
 .product-info .product-name-text {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   line-height: 1;
+}
+
+.product-name-note {
+  display: block;
+  margin-top: 0.22em;
+  font-size: 0.5em;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
 }
 
 .product-info .product-direct-ship {

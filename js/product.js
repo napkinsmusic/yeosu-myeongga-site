@@ -76,13 +76,21 @@
 
   const categoryElement = document.querySelector('[data-product-category]');
   if (categoryElement) categoryElement.hidden = true;
-  setText('[data-product-name]', product.name);
-  if (product.isFeatured) {
-    const productName = document.querySelector('[data-product-name]');
-    const badge = document.createElement('span');
-    badge.className = 'popular-badge';
-    badge.textContent = '인기';
-    productName?.append(badge);
+  const productName = document.querySelector('[data-product-name]');
+  if (productName) {
+    productName.textContent = product.name;
+    if (product.isFeatured) {
+      const badge = document.createElement('span');
+      badge.className = 'popular-badge';
+      badge.textContent = '인기';
+      productName.append(badge);
+    }
+    if (product.nameNote) {
+      const note = document.createElement('span');
+      note.className = 'product-name-note';
+      note.textContent = product.nameNote;
+      productName.append(note);
+    }
   }
   const shortDescription = document.querySelector('[data-product-short-description]');
   if (shortDescription) {

@@ -52,6 +52,12 @@ function createProductCard(product) {
   const label = document.createElement('span');
   label.className = 'product-name-text';
   label.textContent = product.name;
+  if (product.nameNote) {
+    const note = document.createElement('span');
+    note.className = 'product-name-note';
+    note.textContent = product.nameNote;
+    label.append(note);
+  }
   name.append(label);
   if (product.isFeatured) {
     const badge = document.createElement('span');

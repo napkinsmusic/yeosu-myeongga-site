@@ -75,6 +75,12 @@
     const info = document.createElement('div');
     const name = document.createElement('h3');
     name.textContent = product.name;
+    if (product.nameNote) {
+      const note = document.createElement('span');
+      note.className = 'product-name-note';
+      note.textContent = product.nameNote;
+      name.append(note);
+    }
     const meta = document.createElement('p');
     meta.textContent = `${formatWon(price)} · 수량 ${quantity}개`;
     info.append(name, meta);

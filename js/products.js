@@ -205,6 +205,14 @@
   });
 
   const productDraftExtras = {
+    'steamed-barley-gulbi': {
+      name: '보리굴비',
+      nameNote: '(스팀으로 찐)',
+    },
+    croaker: {
+      name: '민어',
+      nameNote: '(스팀으로 찐)',
+    },
     'blue-crab-soy-gejang': {
       storageMethod: '냉장보관',
       options: [
