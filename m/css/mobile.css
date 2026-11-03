@@ -9,8 +9,9 @@
 }
 
 .hero-copy h1 {
-  font-size: min(20px, 4.3cqw);
-  line-height: 1.45;
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.4;
   word-break: keep-all;
 }
 
@@ -148,11 +149,49 @@ textarea {
   font-size: 16px;
 }
 
+body:has(.product-page) {
+  --logo-w: 140px;
+}
+
+body:has(.product-page) > main {
+  padding-top: 0;
+}
+
+body:has(.product-page) .site-header {
+  height: auto;
+  justify-content: flex-start;
+  align-items: flex-start;
+  padding: calc(10px + env(safe-area-inset-top, 0px)) 12px 8px;
+  background: transparent;
+  border: 0;
+  pointer-events: none;
+}
+
+body:has(.product-page) .brand-logo {
+  pointer-events: auto;
+}
+
+body:has(.product-page) .brand-logo img {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.95));
+}
+
 .product-overview {
   width: min(calc(100% - 28px), 760px);
   padding: 8px 0 16px;
   grid-template-columns: 1fr;
   gap: 38px;
+}
+
+body:has(.product-page) .product-overview {
+  width: 100%;
+  padding: 0 0 16px;
+  gap: 22px;
+}
+
+body:has(.product-page) .product-purchase {
+  width: min(calc(100% - 28px), 760px);
+  margin-right: auto;
+  margin-left: auto;
 }
 
 .product-post-arrow {
