@@ -434,7 +434,7 @@ body:has(.product-page) .site-footer {
 }
 
 .checkout-heading {
-  margin-bottom: 18px;
+  display: none;
 }
 
 .checkout-heading .eyebrow {

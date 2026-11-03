@@ -7,7 +7,7 @@
   <title>주문 / 결제 | 여수명가</title>
   <link rel="stylesheet" href="../css/style.css?v=3" />
   <link rel="stylesheet" href="../css/checkout.css?v=2" />
-  <link rel="stylesheet" href="./css/mobile.css?v=30" />
+  <link rel="stylesheet" href="./css/mobile.css?v=31" />
   <script>window.YEOSU_ASSET_ROOT = "../";</script>
 </head>
 <body class="subpage">
@@ -34,6 +34,11 @@
 
     <form class="checkout-form" data-checkout-form hidden>
       <div class="checkout-fields">
+        <section class="checkout-section">
+          <h2>주문상품</h2>
+          <div class="checkout-products" data-checkout-products></div>
+        </section>
+
         <section class="checkout-section">
           <div class="form-grid">
             <label class="form-field form-field-wide">
@@ -72,11 +77,6 @@
             </label>
           </div>
           <p class="form-message" role="status" aria-live="polite" data-address-message></p>
-        </section>
-
-        <section class="checkout-section">
-          <h2>주문상품</h2>
-          <div class="checkout-products" data-checkout-products></div>
         </section>
       </div>
 
