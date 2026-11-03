@@ -316,10 +316,19 @@ body:has(.product-page) .product-purchase {
 }
 
 .mobile-purchase-bar .purchase-button {
-  min-height: 52px;
+  min-height: 56px;
   padding-right: 8px;
   padding-left: 8px;
-  font-size: 13px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.checkout-submit {
+  min-height: 56px;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .subpage .site-footer {
@@ -333,6 +342,13 @@ body:has(.product-page) .product-purchase {
 .option-field select {
   min-height: 72px;
   font-size: 19px;
+}
+
+.option-field select.is-invalid,
+.option-field select.is-invalid:focus {
+  border-color: #e89a9a;
+  outline: 3px solid #f4c7c7;
+  outline-offset: 2px;
 }
 
 .product-meta > div,

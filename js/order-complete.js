@@ -59,9 +59,15 @@
       const info = document.createElement('div');
       const name = document.createElement('h3');
       name.textContent = item.productName;
+      info.append(name);
+      if (item.optionLabel) {
+        const optionLine = document.createElement('p');
+        optionLine.textContent = `옵션 ${item.optionLabel}`;
+        info.append(optionLine);
+      }
       const meta = document.createElement('p');
       meta.textContent = `${formatWon(item.price)} · 수량 ${item.quantity}개`;
-      info.append(name, meta);
+      info.append(meta);
 
       const subtotal = document.createElement('strong');
       subtotal.textContent = formatWon(item.subtotal);

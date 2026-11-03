@@ -62,22 +62,41 @@ function normalizeItems(items) {
     throw new HttpsError('invalid-argument', '주문상품을 확인해 주세요.');
   }
 
-  const quantities = new Map();
-  items.forEach((item) => {
+  return items.map((item) => {
     const productId = requireText(item?.productId, '상품 ID', 120);
     const quantity = Number(item?.quantity);
     if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY_PER_ITEM) {
       throw new HttpsError('invalid-argument', '상품 수량을 확인해 주세요.');
     }
-    quantities.set(productId, (quantities.get(productId) || 0) + quantity);
+    const optionId = item?.optionId ? requireText(item.optionId, '옵션 ID', 120) : '';
+    return { productId, quantity, optionId };
   });
+}
 
-  return [...quantities.entries()].map(([productId, quantity]) => {
-    if (quantity > MAX_QUANTITY_PER_ITEM) {
-      throw new HttpsError('invalid-argument', '상품별 최대 주문수량을 초과했습니다.');
+function resolveProductPrice(product, optionId) {
+  const options = Array.isArray(product.options) ? product.options : [];
+  if (options.length > 0) {
+    const option = options.find((item) => item.id === optionId);
+    if (!option) {
+      throw new HttpsError('invalid-argument', '상품 옵션을 선택해 주세요.');
     }
-    return { productId, quantity };
-  });
+    const price = Number(option.price);
+    if (!Number.isSafeInteger(price) || price < 0) {
+      throw new HttpsError('failed-precondition', '상품 가격 설정을 확인해 주세요.');
+    }
+    return { price, optionLabel: option.label || '' };
+  }
+
+  const regularPrice = Number(product.price);
+  const salePrice =
+    product.salePrice === null || product.salePrice === undefined
+      ? null
+      : Number(product.salePrice);
+  const price = salePrice ?? regularPrice;
+  if (!Number.isSafeInteger(price) || price < 0) {
+    throw new HttpsError('failed-precondition', '상품 가격 설정을 확인해 주세요.');
+  }
+  return { price, optionLabel: '' };
 }
 
 function getSeoulDateKey(date = new Date()) {
@@ -175,15 +194,7 @@ exports.createOrder = onCall(
           throw new HttpsError('failed-precondition', `${product.name || '상품'}의 재고가 부족합니다.`);
         }
 
-        const regularPrice = Number(product.price);
-        const salePrice =
-          product.salePrice === null || product.salePrice === undefined
-            ? null
-            : Number(product.salePrice);
-        const price = salePrice ?? regularPrice;
-        if (!Number.isSafeInteger(price) || price < 0) {
-          throw new HttpsError('failed-precondition', '상품 가격 설정을 확인해 주세요.');
-        }
+        const { price, optionLabel } = resolveProductPrice(product, requestedItem.optionId);
 
         const itemShippingFee = Number(product.shippingFee) || 0;
         const subtotal = price * requestedItem.quantity;
@@ -193,6 +204,8 @@ exports.createOrder = onCall(
         return {
           productId: productSnapshot.id,
           productName: product.name,
+          optionId: requestedItem.optionId || '',
+          optionLabel,
           thumbnail: product.thumbnail || '',
           price,
           quantity: requestedItem.quantity,

@@ -1,10 +1,11 @@
 (function initializePurchaseService(global) {
   const PURCHASE_KEY = 'yeosuMyeongga.directPurchase.v1';
 
-  function setItem(productId, quantity) {
+  function setItem({ productId, optionId = null, quantity }) {
     sessionStorage.removeItem('yeosuMyeongga.clientOrderKey.v1');
     const item = {
       productId,
+      optionId: typeof optionId === 'string' && optionId ? optionId : null,
       quantity: Math.max(Number.parseInt(quantity, 10) || 1, 1),
     };
     sessionStorage.setItem(PURCHASE_KEY, JSON.stringify(item));
@@ -22,7 +23,11 @@
       ) {
         return null;
       }
-      return item;
+      return {
+        productId: item.productId,
+        optionId: typeof item.optionId === 'string' && item.optionId ? item.optionId : null,
+        quantity: item.quantity,
+      };
     } catch {
       return null;
     }

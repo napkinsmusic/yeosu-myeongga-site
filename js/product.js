@@ -165,6 +165,7 @@
     });
     optionSelect.addEventListener('change', () => {
       selectedOption = productOptions.find((option) => option.id === optionSelect.value) ?? null;
+      optionSelect.classList.toggle('is-invalid', !selectedOption);
       renderPrice();
       updateQuantity(quantity);
     });
@@ -416,11 +417,20 @@
     quantityInput.disabled = true;
   } else {
     const buyNow = () => {
-      const paymentModal = document.querySelector('[data-payment-modal]');
-      paymentModal.classList.add('is-open');
-      paymentModal.setAttribute('aria-hidden', 'false');
-      document.body.classList.add('no-scroll');
-      document.querySelector('[data-payment-close]').focus();
+      if (hasOptions && !selectedOption) {
+        optionSelect.classList.add('is-invalid');
+        optionSelect.focus();
+        const message = '옵션을 선택해 주세요.';
+        actionMessage.textContent = message;
+        window.YEOSU_UI?.showMessage(message, 'info');
+        return;
+      }
+      window.YEOSU_PURCHASE.setItem({
+        productId: product.id,
+        optionId: selectedOption?.id || null,
+        quantity,
+      });
+      window.location.href = './checkout.html';
     };
     document.querySelector('[data-buy-now]').addEventListener('click', buyNow);
     document.querySelector('[data-mobile-buy]').addEventListener('click', buyNow);
