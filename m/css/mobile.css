@@ -313,6 +313,18 @@ body:has(.product-page) .product-purchase {
   padding: 10px 14px max(10px, env(safe-area-inset-bottom));
   border-top: 1px solid var(--line);
   background: rgba(255, 255, 255, 0.96);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(18px);
+  transition: opacity 0.45s ease, transform 0.45s ease, visibility 0.45s ease;
+}
+
+.mobile-purchase-bar.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: none;
 }
 
 .mobile-purchase-bar .purchase-button {

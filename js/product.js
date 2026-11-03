@@ -230,19 +230,7 @@
       video.preload = 'auto';
       video.setAttribute('aria-label', `${product.name} 영상`);
       video.src = encodeURI(item.src);
-      const sound = document.createElement('button');
-      sound.type = 'button';
-      sound.className = 'product-post-sound';
-      sound.textContent = '소리 켜기';
-      sound.setAttribute('aria-label', '소리 켜기');
-      sound.addEventListener('click', () => {
-        video.muted = !video.muted;
-        const label = video.muted ? '소리 켜기' : '소리 끄기';
-        sound.textContent = label;
-        sound.setAttribute('aria-label', label);
-        if (!video.muted) video.play().catch(() => {});
-      });
-      slide.append(video, sound);
+      slide.append(video);
     } else if (item.type === 'image') {
       slide = document.createElement('div');
       slide.className = 'product-post-slide is-image';
@@ -396,8 +384,27 @@
   const actionMessage = document.querySelector('[data-action-message]');
   const stockMessage = document.querySelector('[data-stock-message]');
   const mobilePurchaseBar = document.querySelector('[data-mobile-purchase]');
+  const storageSection = document.querySelector('[data-storage-section]');
 
   mobilePurchaseBar.hidden = false;
+  mobilePurchaseBar.setAttribute('aria-hidden', 'true');
+
+  const setPurchaseBarVisible = (visible) => {
+    mobilePurchaseBar.classList.toggle('is-visible', visible);
+    mobilePurchaseBar.setAttribute('aria-hidden', visible ? 'false' : 'true');
+  };
+
+  if (storageSection && 'IntersectionObserver' in window) {
+    const updatePurchaseBar = ([entry]) => {
+      const reachedStorage =
+        entry.isIntersecting || entry.boundingClientRect.top < 0;
+      setPurchaseBarVisible(reachedStorage);
+    };
+    const observer = new IntersectionObserver(updatePurchaseBar, { threshold: 0 });
+    observer.observe(storageSection);
+  } else {
+    setPurchaseBarVisible(true);
+  }
 
   if (isSoldOut) {
     stockMessage.hidden = false;
