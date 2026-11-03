@@ -392,9 +392,7 @@
   const purchaseButtons = [
     document.querySelector('[data-buy-now]'),
     document.querySelector('[data-mobile-buy]'),
-    document.querySelector('[data-kakao-order]'),
-    document.querySelector('[data-mobile-kakao]'),
-  ];
+  ].filter(Boolean);
   const actionMessage = document.querySelector('[data-action-message]');
   const stockMessage = document.querySelector('[data-stock-message]');
   const mobilePurchaseBar = document.querySelector('[data-mobile-purchase]');
@@ -450,20 +448,24 @@
         closePaymentModal();
       }
     });
-
-    const openKakaoOrder = () => {
-      const channelUrl = shopConfig.kakaoChannelUrl;
-      if (!channelUrl) {
-        actionMessage.textContent =
-          '카카오톡 채널 URL을 연결한 뒤 이용할 수 있습니다.';
-        window.YEOSU_UI?.showMessage(actionMessage.textContent, 'info');
-        return;
-      }
-      window.open(channelUrl, '_blank', 'noopener,noreferrer');
-    };
-    document.querySelector('[data-kakao-order]').addEventListener('click', openKakaoOrder);
-    document.querySelector('[data-mobile-kakao]').addEventListener('click', openKakaoOrder);
   }
+
+  const openKakaoInquiry = () => {
+    const channelUrl = shopConfig.kakaoChannelUrl;
+    if (!channelUrl) {
+      const message = '카카오톡 채널 URL을 연결한 뒤 이용할 수 있습니다.';
+      actionMessage.textContent = message;
+      window.YEOSU_UI?.showMessage(message, 'info');
+      return;
+    }
+    window.open(channelUrl, '_blank', 'noopener,noreferrer');
+  };
+  [
+    document.querySelector('[data-kakao-inquiry]'),
+    document.querySelector('[data-mobile-kakao]'),
+  ].filter(Boolean).forEach((button) => {
+    button.addEventListener('click', openKakaoInquiry);
+  });
 
   const productInfoRows = [
     ['productNamePriceContent', '제품명·가격·내용량', '구매 전 제공'],
