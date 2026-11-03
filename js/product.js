@@ -384,14 +384,17 @@
   const actionMessage = document.querySelector('[data-action-message]');
   const stockMessage = document.querySelector('[data-stock-message]');
   const mobilePurchaseBar = document.querySelector('[data-mobile-purchase]');
+  const kakaoFab = document.querySelector('.kakao-fab');
   const storageSection = document.querySelector('[data-storage-section]');
 
   mobilePurchaseBar.hidden = false;
   mobilePurchaseBar.setAttribute('aria-hidden', 'true');
+  if (kakaoFab) kakaoFab.setAttribute('aria-hidden', 'true');
 
   const setPurchaseBarVisible = (visible) => {
     mobilePurchaseBar.classList.toggle('is-visible', visible);
     mobilePurchaseBar.setAttribute('aria-hidden', visible ? 'false' : 'true');
+    if (kakaoFab) kakaoFab.setAttribute('aria-hidden', visible ? 'false' : 'true');
   };
 
   if (storageSection && 'IntersectionObserver' in window) {
