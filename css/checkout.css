@@ -96,6 +96,10 @@
   gap: 8px;
 }
 
+.form-field[hidden] {
+  display: none;
+}
+
 .form-field-wide {
   grid-column: 1 / -1;
 }
@@ -131,6 +135,68 @@
   border: 1px solid #111;
   background: #fff;
   cursor: pointer;
+}
+
+.address-search-row input[readonly] {
+  background: #f7f7f7;
+  cursor: pointer;
+}
+
+body.postcode-open {
+  overflow: hidden;
+}
+
+.postcode-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  background: #fff;
+}
+
+.postcode-overlay[hidden] {
+  display: none;
+}
+
+.postcode-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  height: 100dvh;
+  background: #fff;
+}
+
+.postcode-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 0 0 auto;
+  min-height: 52px;
+  padding: 0 16px;
+  border-bottom: 1px solid #111;
+}
+
+.postcode-toolbar strong {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.postcode-close {
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid #111;
+  background: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.postcode-embed {
+  flex: 1 1 auto;
+  min-height: 400px;
+  height: calc(100dvh - 52px);
 }
 
 .form-message {
