@@ -789,7 +789,8 @@
   margin-top: 24px;
 }
 
-.mobile-purchase-bar {
+.mobile-purchase-bar,
+.kakao-fab {
   display: none;
 }
 

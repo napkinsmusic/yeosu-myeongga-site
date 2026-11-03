@@ -336,6 +336,53 @@ body:has(.product-page) .product-purchase {
   letter-spacing: -0.03em;
 }
 
+.kakao-fab {
+  position: fixed;
+  z-index: 80;
+  right: 12px;
+  bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  width: auto;
+  height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #191919;
+  cursor: pointer;
+  transition: bottom 0.45s ease;
+}
+
+body:has(.mobile-purchase-bar.is-visible) .kakao-fab {
+  bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+}
+
+.kakao-fab-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #fee500;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+}
+
+.kakao-fab svg {
+  width: 28px;
+  height: 28px;
+  fill: currentColor;
+}
+
+.kakao-fab-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px #fff, 0 0 8px #fff;
+}
+
 .checkout-submit {
   min-height: 56px;
   font-size: 18px;
@@ -345,6 +392,10 @@ body:has(.product-page) .product-purchase {
 
 .subpage .site-footer {
   padding-bottom: 150px;
+}
+
+body:has(.product-page) .site-footer {
+  padding-bottom: 90px;
 }
 
 .option-field label {
