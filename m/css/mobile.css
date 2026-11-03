@@ -32,14 +32,33 @@
 }
 
 .section {
-  width: min(calc(100% - 28px), var(--max));
-  padding: 76px 0;
+  width: min(calc(100% - 16px), var(--max));
+  padding: 48px 0;
+}
+
+#signature-products,
+#all-products {
+  width: 100%;
+  padding: 28px 6px 32px;
 }
 
 .product-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  column-gap: 8px;
-  row-gap: 60px;
+  column-gap: 4px;
+  row-gap: 22px;
+}
+
+.product-info h3 {
+  font-size: 15.8cqw;
+}
+
+.popular-badge {
+  animation: none;
+}
+
+.popular-badge::before {
+  content: none;
+  animation: none;
 }
 
 .category-grid {
@@ -116,7 +135,7 @@ textarea {
 }
 
 .product-purchase h1 {
-  font-size: 30px;
+  font-size: 60px;
 }
 
 .product-details {
@@ -225,19 +244,15 @@ textarea {
   max-width: none;
 }
 
-/* 컴퓨터에서 이 주소를 열어도 휴대폰 폭 그대로 보입니다. */
 :root {
   --logo-w: min(68vw, 240px);
 }
 
-html {
-  background: #efefef;
-}
-
+html,
 body {
-  width: min(100%, 420px);
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
+  max-width: none;
+  background: #fff;
 }
 
 .site-header,
@@ -245,11 +260,10 @@ body {
 .site-messages {
   left: 0;
   right: 0;
-  width: min(100%, 420px);
-  margin-right: auto;
-  margin-left: auto;
+  width: 100%;
+  margin: 0;
 }
 
 .site-messages {
-  width: min(360px, calc(min(100%, 420px) - 36px));
+  width: min(360px, calc(100% - 24px));
 }
