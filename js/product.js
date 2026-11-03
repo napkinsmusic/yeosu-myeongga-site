@@ -524,4 +524,33 @@
     section.append(heading, table);
     productInfoContainer.insertAdjacentElement('afterend', section);
   }
+
+  function initPhotoLogoFade() {
+    if (!document.body.classList.contains('has-photo-logo')) return;
+    const header = document.querySelector('.site-header');
+    const photo = document.querySelector('[data-product-post]');
+    if (!header || !photo) return;
+
+    let ticking = false;
+    const update = () => {
+      ticking = false;
+      const rect = photo.getBoundingClientRect();
+      const fadeDistance = Math.max(90, Math.min(180, rect.height * 0.3));
+      const opacity = Math.max(0, Math.min(1, rect.bottom / fadeDistance));
+      header.style.opacity = String(opacity);
+      header.style.visibility = opacity < 0.02 ? 'hidden' : 'visible';
+    };
+
+    const requestUpdate = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(update);
+    };
+
+    update();
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate);
+  }
+
+  initPhotoLogoFade();
 })();
