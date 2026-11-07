@@ -217,6 +217,11 @@
     croaker: {
       name: '민어',
       nameNote: '(스팀으로 찐)',
+      options: [
+        { id: '1pc', label: '1개', price: 13000 },
+        { id: '3pc', label: '3개', price: 37500 },
+        { id: '5pc', label: '5개', price: 60000 },
+      ],
     },
     'croaker-soup': {
       options: [
@@ -251,6 +256,28 @@
         { id: '2pc', label: '2개', price: 19000 },
         { id: '3pc', label: '3개', price: 27000 },
         { id: '5pc', label: '5개', price: 42500 },
+      ],
+    },
+    hairtail: {
+      options: [
+        { id: '1pc', label: '1개', price: 12000 },
+        { id: '3pc', label: '3개', price: 33000 },
+        { id: '5pc', label: '5개', price: 50000 },
+      ],
+    },
+    mackerel: {
+      options: [
+        { id: '1pc', label: '1개', price: 4500 },
+        { id: '3pc', label: '3개', price: 13000 },
+        { id: '5pc', label: '5개', price: 20000 },
+        { id: '7pc', label: '7개', price: 26000 },
+      ],
+    },
+    tilefish: {
+      options: [
+        { id: '1pc', label: '1개', price: 13500 },
+        { id: '3pc', label: '3개', price: 39000 },
+        { id: '5pc', label: '5개', price: 62500 },
       ],
     },
     'dolsan-gat-kimchi': {

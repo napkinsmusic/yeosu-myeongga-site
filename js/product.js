@@ -293,8 +293,6 @@
 
   async function renderProductPost() {
     const slides = [];
-    const videoUrl = await findExistingVideo();
-    if (videoUrl) slides.push({ type: 'video', src: videoUrl });
     imagePaths().forEach((src) => {
       slides.push({ type: 'image', src });
     });
