@@ -231,6 +231,13 @@
         { id: '2kg', label: '2Kg', price: 70000 },
       ],
     },
+    'abalone-jangjorim': {
+      options: [
+        { id: '500g', label: '500g', price: 30000 },
+        { id: '1kg', label: '1Kg', price: 60000 },
+        { id: '2kg', label: '2Kg', price: 85000 },
+      ],
+    },
     'dolsan-gat-kimchi': {
       options: [
         { id: '1kg', label: '1Kg', price: 12500 },
