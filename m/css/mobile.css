@@ -43,8 +43,13 @@
   padding: 28px 6px 12px;
 }
 
-.centennial-certificate {
+.certificate-gallery {
+  gap: 18px;
   padding: 12px 10px 16px;
+}
+
+.certificate-row {
+  gap: 6px;
 }
 
 .thanks-banner {

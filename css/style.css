@@ -139,6 +139,53 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   object-fit: cover;
 }
 
+.hero-load {
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.22);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.hero-load.is-done {
+  opacity: 0;
+}
+
+.hero-load-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.2s linear;
+}
+
+.hero-load.is-pending .hero-load-fill {
+  width: 32%;
+  transition: none;
+  animation: hero-load-slide 1.15s ease-in-out infinite;
+}
+
+@keyframes hero-load-slide {
+  0% { transform: translateX(-120%); }
+  100% { transform: translateX(340%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-load.is-pending .hero-load-fill {
+    width: 100%;
+    animation: none;
+    transform: scaleX(0.35);
+  }
+}
+
 .hero-overlay {
   position: absolute;
   inset: 0;
@@ -205,17 +252,27 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   background: #f3f2ef;
 }
 
-.centennial-certificate {
-  display: flex;
-  justify-content: center;
-  gap: clamp(8px, 2cqw, 32px);
+.certificate-gallery {
+  display: grid;
+  gap: clamp(28px, 4cqw, 56px);
   padding: clamp(64px, 8cqw, 128px) 24px;
   background: #fff;
 }
 
-.centennial-certificate img {
-  width: min(calc((100% - 2 * clamp(8px, 2cqw, 32px)) / 3), 480px);
+.certificate-row {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: clamp(8px, 2cqw, 32px);
+}
+
+.certificate-row img {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 480px;
+  width: auto;
   height: auto;
+  object-fit: contain;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
 }
 

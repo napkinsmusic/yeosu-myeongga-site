@@ -216,6 +216,52 @@ function initHeroLogoFade() {
 
 initHeroLogoFade();
 
+function initHeroVideoLoad() {
+  const video = document.querySelector('.hero-video');
+  const bar = document.querySelector('[data-hero-load]');
+  if (!video || !bar) return;
+
+  const fill = bar.querySelector('.hero-load-fill');
+  let done = false;
+
+  const finish = () => {
+    if (done) return;
+    done = true;
+    bar.classList.add('is-done');
+    bar.setAttribute('aria-valuenow', '100');
+    const remove = () => {
+      if (bar.isConnected) bar.remove();
+    };
+    bar.addEventListener('transitionend', remove, { once: true });
+    window.setTimeout(remove, 500);
+  };
+
+  if (video.readyState >= 3) {
+    bar.remove();
+    return;
+  }
+
+  const update = () => {
+    if (done) return;
+    const duration = video.duration;
+    if (!Number.isFinite(duration) || duration <= 0 || video.buffered.length === 0) return;
+    const loaded = video.buffered.end(video.buffered.length - 1);
+    const ratio = Math.max(0, Math.min(1, loaded / duration));
+    bar.classList.remove('is-pending');
+    if (fill) fill.style.transform = `scaleX(${ratio})`;
+    bar.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+  };
+
+  video.addEventListener('progress', update);
+  video.addEventListener('loadedmetadata', update);
+  video.addEventListener('loadeddata', update);
+  video.addEventListener('playing', finish, { once: true });
+  video.addEventListener('error', finish, { once: true });
+  update();
+}
+
+initHeroVideoLoad();
+
 const thanksImage = document.querySelector('.thanks-banner img');
 if (thanksImage) {
   const hideMissingThanksImage = () => {
