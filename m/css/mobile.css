@@ -358,11 +358,15 @@ body:has(.product-page) .product-purchase {
   transform: none;
 }
 
+.mobile-purchase-actions {
+  grid-template-columns: 1fr 1fr;
+}
+
 .mobile-purchase-bar .purchase-button {
   min-height: 56px;
   padding-right: 8px;
   padding-left: 8px;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 700;
   letter-spacing: -0.03em;
 }
@@ -394,6 +398,33 @@ body:has(.mobile-purchase-bar.is-visible) .kakao-fab {
   visibility: visible;
   pointer-events: auto;
   transform: none;
+}
+
+.cart-fab {
+  right: 12px;
+  bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+}
+
+body:has(.kakao-fab) .cart-fab {
+  bottom: calc(86px + env(safe-area-inset-bottom, 0px));
+}
+
+body:has(.mobile-purchase-bar.is-visible) .cart-fab {
+  bottom: calc(166px + env(safe-area-inset-bottom, 0px));
+}
+
+.cart-page {
+  width: min(calc(100% - 28px), 760px);
+  padding: 24px 0 48px;
+}
+
+.cart-item {
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.cart-item strong {
+  grid-column: 2;
 }
 
 .kakao-fab-icon {
@@ -466,6 +497,11 @@ body:has(.product-page) .site-footer {
 
 .checkout-heading {
   display: none;
+}
+
+.cart-page .checkout-heading {
+  display: block;
+  margin-bottom: 16px;
 }
 
 .checkout-heading .eyebrow {

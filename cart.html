@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="여수명가 장바구니" />
+  <title>장바구니 | 여수명가</title>
+  <script>
+    (function () {
+      var ua = navigator.userAgent || "";
+      var touchMac = navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1;
+      var mobile = touchMac || /Android|iPhone|iPad|iPod|Mobile|IEMobile/i.test(ua);
+      if (navigator.userAgentData && navigator.userAgentData.mobile) mobile = true;
+      if (!mobile) return;
+      var file = location.pathname.split("/").filter(Boolean).pop() || "index.html";
+      if (!/\.html$/i.test(file)) file = "index.html";
+      location.replace("m/" + file + location.search + location.hash);
+    })();
+  </script>
+  <link rel="stylesheet" href="./css/style.css?v=8" />
+  <link rel="stylesheet" href="./css/checkout.css?v=3" />
+  <link rel="stylesheet" href="./css/product.css?v=5" />
+  <link rel="stylesheet" href="./css/cart.css?v=1" />
+</head>
+<body class="subpage">
+  <header class="site-header" id="top">
+    <span aria-hidden="true"></span>
+    <a class="brand-logo" href="./index.html">
+      <img src="./assets/images/logo.png" alt="여수명가" />
+    </a>
+    <nav class="header-right" aria-label="빠른 메뉴">
+      <a class="header-action" href="./index.html#all-products">상품으로 돌아가기</a>
+    </nav>
+  </header>
+
+  <main class="cart-page">
+    <div class="checkout-heading">
+      <p class="eyebrow">CART</p>
+      <h1>장바구니</h1>
+    </div>
+
+    <section class="checkout-empty" data-cart-empty hidden>
+      <h2>장바구니가 비어 있습니다.</h2>
+      <p>상품을 담은 뒤 한 번에 결제할 수 있습니다.</p>
+      <a class="outline-button" href="./index.html#all-products">상품 보러 가기</a>
+    </section>
+
+    <div data-cart-panel hidden>
+      <div class="checkout-products" data-cart-items></div>
+      <aside class="cart-summary">
+        <dl>
+          <div><dt>상품금액</dt><dd data-cart-products-total>0원</dd></div>
+          <div><dt>배송비</dt><dd data-cart-shipping>0원</dd></div>
+          <div class="checkout-final"><dt>결제금액</dt><dd data-cart-total>0원</dd></div>
+        </dl>
+        <button class="cart-checkout" type="button" data-cart-checkout>한번에 결제하기</button>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <a class="footer-brand" href="./index.html">여수명가</a>
+      <p>(주)전남산업콘텐츠연구원 · 대표 유란</p>
+      <p>전남 여수시 돌산읍 신추길 6</p>
+      <p>T. 010 3353 2724</p>
+    </div>
+    <p class="copyright">© YEOSU MYEONGGA. All rights reserved.</p>
+  </footer>
+
+  <script src="./js/products.js?v=5"></script>
+  <script src="./js/store-config.js"></script>
+  <script src="./js/firebase/firebase-config.js"></script>
+  <script src="./js/services/product-service.js"></script>
+  <script src="./js/cart-service.js"></script>
+  <script src="./js/purchase-service.js?v=3"></script>
+  <script src="./js/main.js?v=6"></script>
+  <script src="./js/cart.js?v=1"></script>
+</body>
+</html>

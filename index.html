@@ -18,6 +18,7 @@
     })();
   </script>
   <link rel="stylesheet" href="./css/style.css?v=8" />
+  <link rel="stylesheet" href="./css/cart.css?v=1" />
   <link rel="preload" as="video" href="./assets/video/hero.mp4" />
 </head>
 <body>
@@ -135,6 +136,16 @@
     </section>
   </main>
 
+  <a class="cart-fab" href="./cart.html" data-cart-fab aria-label="장바구니">
+    <span class="cart-fab-icon">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <path d="M13.2 14.2V12a6.8 6.8 0 0 1 13.6 0v2.2h3.7l-1.7 17.6H11.2L9.5 14.2h3.7zm2.4-2.2a4.4 4.4 0 0 1 8.8 0v2.2h-8.8V12z" />
+      </svg>
+      <span class="cart-fab-count" data-cart-count hidden></span>
+    </span>
+    <span class="cart-fab-label">장바구니</span>
+  </a>
+
   <footer class="site-footer">
     <div>
       <a class="footer-brand" href="#top">여수명가</a>
@@ -160,6 +171,7 @@
   <script src="./js/products.js?v=5"></script>
   <script src="./js/firebase/firebase-config.js"></script>
   <script src="./js/services/product-service.js"></script>
+  <script src="./js/cart-service.js"></script>
   <script src="./js/main.js?v=6"></script>
 </body>
 </html>

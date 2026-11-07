@@ -474,6 +474,11 @@
 
 .purchase-actions {
   margin-top: 18px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.purchase-actions .kakao {
+  grid-column: 1 / -1;
 }
 
 .purchase-button {

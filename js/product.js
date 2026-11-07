@@ -380,6 +380,8 @@
   const purchaseButtons = [
     document.querySelector('[data-buy-now]'),
     document.querySelector('[data-mobile-buy]'),
+    document.querySelector('[data-add-cart]'),
+    document.querySelector('[data-mobile-cart]'),
   ].filter(Boolean);
   const actionMessage = document.querySelector('[data-action-message]');
   const stockMessage = document.querySelector('[data-stock-message]');
@@ -424,24 +426,48 @@
     });
     quantityInput.disabled = true;
   } else {
-    const buyNow = () => {
+    const requireOption = () => {
       if (hasOptions && !selectedOption) {
         optionSelect.classList.add('is-invalid');
         optionSelect.focus();
         const message = '옵션을 선택해 주세요.';
         actionMessage.textContent = message;
         window.YEOSU_UI?.showMessage(message, 'info');
-        return;
+        return false;
       }
-      window.YEOSU_PURCHASE.setItem({
-        productId: product.id,
-        optionId: selectedOption?.id || null,
-        quantity,
-      });
+      return true;
+    };
+
+    const currentItem = () => ({
+      productId: product.id,
+      optionId: selectedOption?.id || null,
+      quantity,
+    });
+
+    const buyNow = () => {
+      if (!requireOption()) return;
+      window.YEOSU_PURCHASE.setItem(currentItem());
       window.location.href = './checkout.html';
     };
-    document.querySelector('[data-buy-now]').addEventListener('click', buyNow);
-    document.querySelector('[data-mobile-buy]').addEventListener('click', buyNow);
+
+    const addToCart = () => {
+      if (!requireOption()) return;
+      if (getUnitPrice() === null) {
+        const message = '가격 준비 중인 상품입니다.';
+        actionMessage.textContent = message;
+        window.YEOSU_UI?.showMessage(message, 'info');
+        return;
+      }
+      window.YEOSU_CART.add(currentItem());
+      const message = '장바구니에 담았습니다.';
+      actionMessage.textContent = message;
+      window.YEOSU_UI?.showMessage(message, 'success');
+    };
+
+    document.querySelector('[data-buy-now]')?.addEventListener('click', buyNow);
+    document.querySelector('[data-mobile-buy]')?.addEventListener('click', buyNow);
+    document.querySelector('[data-add-cart]')?.addEventListener('click', addToCart);
+    document.querySelector('[data-mobile-cart]')?.addEventListener('click', addToCart);
 
     const paymentModal = document.querySelector('[data-payment-modal]');
     const closePaymentModal = () => {

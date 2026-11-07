@@ -2,7 +2,9 @@
   const products = window.YEOSU_PRODUCT_SERVICE
     ? await window.YEOSU_PRODUCT_SERVICE.listProducts()
     : window.YEOSU_STORE?.products ?? [];
-  const purchaseItem = window.YEOSU_PURCHASE.getItem();
+  const purchaseItems = typeof window.YEOSU_PURCHASE.getItems === 'function'
+    ? window.YEOSU_PURCHASE.getItems()
+    : (window.YEOSU_PURCHASE.getItem() ? [window.YEOSU_PURCHASE.getItem()] : []);
   const emptySection = document.querySelector('[data-checkout-empty]');
   const form = document.querySelector('[data-checkout-form]');
   const productsContainer = document.querySelector('[data-checkout-products]');
@@ -10,19 +12,13 @@
   const formatWon = (value) => `${new Intl.NumberFormat('ko-KR').format(value)}원`;
   const shopConfig = window.SHOP_CONFIG ?? {};
 
-  const product = purchaseItem
-    ? products.find(
-        (item) =>
-          item.id === purchaseItem.productId
-          && item.isVisible
-          && !item.isDeleted,
-      )
-    : null;
-  const productOptions = Array.isArray(product?.options) ? product.options : [];
-  const selectedOption = productOptions.find((option) => option.id === purchaseItem?.optionId) ?? null;
-  const requiresOption = productOptions.length > 0;
+  function findProduct(productId) {
+    return products.find(
+      (item) => item.id === productId && item.isVisible && !item.isDeleted,
+    ) ?? null;
+  }
 
-  function getUnitPrice() {
+  function getUnitPrice(product, selectedOption) {
     if (selectedOption && Number.isFinite(selectedOption.price)) return selectedOption.price;
     if (product?.id === 'pollack-roe') return 35000;
     const salePrice = product?.salePrice;
@@ -37,22 +33,24 @@
     return productAmount >= freeFrom ? 0 : shippingFee;
   }
 
-  const unitPrice = getUnitPrice();
-  const hasValidPrice = Number.isSafeInteger(unitPrice) && unitPrice >= 0;
-  const maximumQuantity =
-    product && !product.isSoldOut
-      ? (Number.isInteger(product.stock) ? Math.max(product.stock, 0) : 999)
-      : 0;
-  const validItems =
-    product && maximumQuantity > 0 && (!requiresOption || selectedOption)
-      ? [{
-          ...purchaseItem,
-          product,
-          option: selectedOption,
-          quantity: Math.min(purchaseItem.quantity, maximumQuantity),
-          unitPrice,
-        }]
-      : [];
+  const validItems = purchaseItems.flatMap((purchaseItem) => {
+    const product = findProduct(purchaseItem.productId);
+    if (!product || product.isSoldOut) return [];
+    const productOptions = Array.isArray(product.options) ? product.options : [];
+    const selectedOption = productOptions.find((option) => option.id === purchaseItem.optionId) ?? null;
+    if (productOptions.length > 0 && !selectedOption) return [];
+    const unitPrice = getUnitPrice(product, selectedOption);
+    const maximumQuantity = Number.isInteger(product.stock) ? Math.max(product.stock, 0) : 999;
+    if (maximumQuantity < 1) return [];
+    return [{
+      ...purchaseItem,
+      product,
+      option: selectedOption,
+      quantity: Math.min(purchaseItem.quantity, maximumQuantity),
+      unitPrice,
+    }];
+  });
+  const hasValidPrice = validItems.every((item) => Number.isSafeInteger(item.unitPrice) && item.unitPrice >= 0);
 
   if (validItems.length === 0) {
     emptySection.hidden = false;
@@ -66,7 +64,7 @@
 
   let productsTotal = 0;
   validItems.forEach(({ product, option, quantity, unitPrice }) => {
-    const displayPrice = hasValidPrice ? unitPrice : 0;
+    const displayPrice = Number.isFinite(unitPrice) ? unitPrice : 0;
     const subtotal = displayPrice * quantity;
     productsTotal += subtotal;
 

@@ -1,36 +1,40 @@
 (function initializePurchaseService(global) {
   const PURCHASE_KEY = 'yeosuMyeongga.directPurchase.v1';
 
-  function setItem({ productId, optionId = null, quantity }) {
-    sessionStorage.removeItem('yeosuMyeongga.clientOrderKey.v1');
-    const item = {
-      productId,
-      optionId: typeof optionId === 'string' && optionId ? optionId : null,
-      quantity: Math.max(Number.parseInt(quantity, 10) || 1, 1),
+  function normalize(item) {
+    if (!item || typeof item.productId !== 'string' || !item.productId) return null;
+    const quantity = Math.max(Number.parseInt(item.quantity, 10) || 1, 1);
+    return {
+      productId: item.productId,
+      optionId: typeof item.optionId === 'string' && item.optionId ? item.optionId : null,
+      quantity,
     };
-    sessionStorage.setItem(PURCHASE_KEY, JSON.stringify(item));
-    return item;
+  }
+
+  function setItems(items) {
+    sessionStorage.removeItem('yeosuMyeongga.clientOrderKey.v1');
+    const next = (Array.isArray(items) ? items : []).map(normalize).filter(Boolean);
+    sessionStorage.setItem(PURCHASE_KEY, JSON.stringify(next));
+    return next;
+  }
+
+  function setItem({ productId, optionId = null, quantity }) {
+    return setItems([{ productId, optionId, quantity }]);
+  }
+
+  function getItems() {
+    try {
+      const raw = JSON.parse(sessionStorage.getItem(PURCHASE_KEY) || 'null');
+      if (Array.isArray(raw)) return raw.map(normalize).filter(Boolean);
+      const single = normalize(raw);
+      return single ? [single] : [];
+    } catch {
+      return [];
+    }
   }
 
   function getItem() {
-    try {
-      const item = JSON.parse(sessionStorage.getItem(PURCHASE_KEY) || 'null');
-      if (
-        !item
-        || typeof item.productId !== 'string'
-        || !Number.isInteger(item.quantity)
-        || item.quantity < 1
-      ) {
-        return null;
-      }
-      return {
-        productId: item.productId,
-        optionId: typeof item.optionId === 'string' && item.optionId ? item.optionId : null,
-        quantity: item.quantity,
-      };
-    } catch {
-      return null;
-    }
+    return getItems()[0] || null;
   }
 
   function clear() {
@@ -39,7 +43,9 @@
 
   global.YEOSU_PURCHASE = Object.freeze({
     setItem,
+    setItems,
     getItem,
+    getItems,
     clear,
   });
 })(window);
