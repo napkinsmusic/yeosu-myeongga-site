@@ -129,7 +129,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   width: 100%;
   aspect-ratio: 16 / 9;
   overflow: hidden;
-  background: #151515;
+  background: #151515 url("../assets/images/main 1.png") center / cover no-repeat;
 }
 
 .hero-video {
@@ -137,6 +137,12 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   inset: 0;
   height: 100%;
   object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.hero.is-playing .hero-video {
+  opacity: 1;
 }
 
 .hero-load {

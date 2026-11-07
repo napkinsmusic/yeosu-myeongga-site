@@ -221,13 +221,23 @@ function initHeroVideoLoad() {
   const bar = document.querySelector('[data-hero-load]');
   if (!video || !bar) return;
 
+  const hero = video.closest('.hero');
   const fill = bar.querySelector('.hero-load-fill');
-  const fillMs = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1600;
+  const fillMs = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 400 : 1600;
   const startedAt = performance.now();
   let done = false;
   let raf = 0;
 
-  video.pause();
+  video.muted = true;
+  video.playsInline = true;
+  video.preload = 'auto';
+
+  const holdUntilBar = () => {
+    if (!done) video.pause();
+  };
+  video.addEventListener('playing', holdUntilBar);
+  const startLoad = video.play();
+  if (startLoad && typeof startLoad.catch === 'function') startLoad.catch(() => {});
 
   const setFill = (ratio) => {
     const value = Math.max(0, Math.min(1, ratio));
@@ -235,14 +245,25 @@ function initHeroVideoLoad() {
     bar.setAttribute('aria-valuenow', String(Math.round(value * 100)));
   };
 
+  const playVideo = () => {
+    const play = video.play();
+    if (play && typeof play.catch === 'function') {
+      play.catch(() => {
+        video.addEventListener('canplay', playVideo, { once: true });
+        video.addEventListener('loadeddata', playVideo, { once: true });
+      });
+    }
+  };
+
   const finish = () => {
     if (done) return;
     done = true;
     cancelAnimationFrame(raf);
+    video.removeEventListener('playing', holdUntilBar);
     setFill(1);
     bar.classList.add('is-done');
-    const play = video.play();
-    if (play && typeof play.catch === 'function') play.catch(() => {});
+    hero?.classList.add('is-playing');
+    playVideo();
     const remove = () => {
       if (bar.isConnected) bar.remove();
     };
@@ -250,14 +271,11 @@ function initHeroVideoLoad() {
     window.setTimeout(remove, 450);
   };
 
-  const canPlay = () => video.readyState >= 3;
-
   const tick = (now) => {
     if (done) return;
-    const timeRatio = fillMs === 0 ? 1 : Math.min(1, (now - startedAt) / fillMs);
-    const visual = canPlay() ? timeRatio : Math.min(timeRatio, 0.92);
-    setFill(visual);
-    if (canPlay() && timeRatio >= 1) {
+    const timeRatio = Math.min(1, (now - startedAt) / fillMs);
+    setFill(timeRatio);
+    if (timeRatio >= 1) {
       finish();
       return;
     }
