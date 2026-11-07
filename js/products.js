@@ -208,6 +208,11 @@
     'steamed-barley-gulbi': {
       name: '보리굴비',
       nameNote: '(스팀으로 찐)',
+      options: [
+        { id: '1pc', label: '1마리', price: 15000 },
+        { id: '5pc-kimchi', label: '5마리 + 갓김치 1Kg', price: 75000 },
+        { id: '10pc-kimchi', label: '10마리 + 갓김치 1Kg', price: 150000 },
+      ],
     },
     croaker: {
       name: '민어',
