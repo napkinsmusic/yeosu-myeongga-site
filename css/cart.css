@@ -103,7 +103,8 @@
 .cart-fab svg {
   width: 26px;
   height: 26px;
-  fill: currentColor;
+  fill: none;
+  stroke: currentColor;
 }
 
 .cart-fab-count {
