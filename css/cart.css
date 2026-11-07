@@ -91,9 +91,9 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: #111;
-  color: #fff;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+  background: #ececec;
+  color: #111;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
 .cart-fab svg {
