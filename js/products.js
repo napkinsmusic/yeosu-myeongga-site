@@ -238,6 +238,13 @@
         { id: '2kg', label: '2Kg', price: 85000 },
       ],
     },
+    'gochujang-gulbi': {
+      options: [
+        { id: '1pc', label: '1개 (100g당 8,950원)', price: 17900 },
+        { id: '2pc', label: '2개', price: 34000 },
+        { id: '5pc', label: '5개', price: 75000 },
+      ],
+    },
     'dolsan-gat-kimchi': {
       options: [
         { id: '1kg', label: '1Kg', price: 12500 },
