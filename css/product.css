@@ -236,13 +236,6 @@
   font-size: 25px;
 }
 
-.product-price-note {
-  color: #555;
-  font-size: 18px;
-  font-weight: 400;
-  letter-spacing: -0.03em;
-}
-
 .product-price del {
   color: #999;
 }

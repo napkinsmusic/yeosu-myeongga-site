@@ -120,16 +120,8 @@
 
   function appendOptionPrice(option) {
     const salePrice = document.createElement('strong');
-    salePrice.textContent = formatWon(option.price);
-    priceContainer.append(salePrice);
-    if (option.note) {
-      const note = document.createElement('span');
-      note.className = 'product-price-note';
-      note.textContent = `(${option.note})`;
-      priceContainer.append(note);
-      return;
-    }
     salePrice.textContent = `${formatWon(option.price)} (${option.label})`;
+    priceContainer.append(salePrice);
   }
 
   function renderPrice() {
@@ -169,9 +161,7 @@
     productOptions.forEach((option) => {
       const item = document.createElement('option');
       item.value = option.id;
-      item.textContent = option.note
-        ? `${option.label} — ${formatWon(option.price)} (${option.note})`
-        : `${option.label} — ${formatWon(option.price)}`;
+      item.textContent = `${option.label} — ${formatWon(option.price)}`;
       optionSelect.append(item);
     });
     optionSelect.addEventListener('change', () => {

@@ -245,14 +245,14 @@
     },
     'gochujang-gulbi': {
       options: [
-        { id: '1pc', label: '1개', price: 17900, note: '100g당 8,950원' },
+        { id: '1pc', label: '1개', price: 17900 },
         { id: '2pc', label: '2개', price: 34000 },
         { id: '5pc', label: '5개', price: 75000 },
       ],
     },
     'pollack-roe': {
       options: [
-        { id: '1pc', label: '1개', price: 9900, note: '10g당 500원' },
+        { id: '1pc', label: '1개', price: 9900 },
         { id: '2pc', label: '2개', price: 19000 },
         { id: '3pc', label: '3개', price: 27000 },
         { id: '5pc', label: '5개', price: 42500 },
