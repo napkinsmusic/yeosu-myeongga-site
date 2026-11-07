@@ -213,6 +213,12 @@
       name: '민어',
       nameNote: '(스팀으로 찐)',
     },
+    'croaker-soup': {
+      options: [
+        { id: '1pack', label: '1팩', price: 32000 },
+        { id: '2pack', label: '2팩', price: 60000 },
+      ],
+    },
     'dolsan-gat-kimchi': {
       options: [
         { id: '1kg', label: '1Kg', price: 12500 },
