@@ -224,6 +224,13 @@
         { id: '2pack', label: '2팩', price: 60000 },
       ],
     },
+    'prawn-jang': {
+      options: [
+        { id: '500g', label: '500g', price: 25000 },
+        { id: '1kg', label: '1Kg', price: 40000 },
+        { id: '2kg', label: '2Kg', price: 70000 },
+      ],
+    },
     'dolsan-gat-kimchi': {
       options: [
         { id: '1kg', label: '1Kg', price: 12500 },
