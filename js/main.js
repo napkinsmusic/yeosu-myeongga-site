@@ -222,42 +222,50 @@ function initHeroVideoLoad() {
   if (!video || !bar) return;
 
   const fill = bar.querySelector('.hero-load-fill');
+  const fillMs = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1600;
+  const startedAt = performance.now();
   let done = false;
+  let raf = 0;
+
+  video.pause();
+
+  const setFill = (ratio) => {
+    const value = Math.max(0, Math.min(1, ratio));
+    if (fill) fill.style.transform = `scaleX(${value})`;
+    bar.setAttribute('aria-valuenow', String(Math.round(value * 100)));
+  };
 
   const finish = () => {
     if (done) return;
     done = true;
+    cancelAnimationFrame(raf);
+    setFill(1);
     bar.classList.add('is-done');
-    bar.setAttribute('aria-valuenow', '100');
+    const play = video.play();
+    if (play && typeof play.catch === 'function') play.catch(() => {});
     const remove = () => {
       if (bar.isConnected) bar.remove();
     };
     bar.addEventListener('transitionend', remove, { once: true });
-    window.setTimeout(remove, 500);
+    window.setTimeout(remove, 450);
   };
 
-  if (video.readyState >= 3) {
-    bar.remove();
-    return;
-  }
+  const canPlay = () => video.readyState >= 3;
 
-  const update = () => {
+  const tick = (now) => {
     if (done) return;
-    const duration = video.duration;
-    if (!Number.isFinite(duration) || duration <= 0 || video.buffered.length === 0) return;
-    const loaded = video.buffered.end(video.buffered.length - 1);
-    const ratio = Math.max(0, Math.min(1, loaded / duration));
-    bar.classList.remove('is-pending');
-    if (fill) fill.style.transform = `scaleX(${ratio})`;
-    bar.setAttribute('aria-valuenow', String(Math.round(ratio * 100)));
+    const timeRatio = fillMs === 0 ? 1 : Math.min(1, (now - startedAt) / fillMs);
+    const visual = canPlay() ? timeRatio : Math.min(timeRatio, 0.92);
+    setFill(visual);
+    if (canPlay() && timeRatio >= 1) {
+      finish();
+      return;
+    }
+    raf = requestAnimationFrame(tick);
   };
 
-  video.addEventListener('progress', update);
-  video.addEventListener('loadedmetadata', update);
-  video.addEventListener('loadeddata', update);
-  video.addEventListener('playing', finish, { once: true });
   video.addEventListener('error', finish, { once: true });
-  update();
+  raf = requestAnimationFrame(tick);
 }
 
 initHeroVideoLoad();

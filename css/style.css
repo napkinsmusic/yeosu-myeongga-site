@@ -150,7 +150,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   background: rgba(255, 255, 255, 0.22);
   pointer-events: none;
   opacity: 1;
-  transition: opacity 0.4s ease;
+  transition: opacity 0.35s ease;
 }
 
 .hero-load.is-done {
@@ -164,26 +164,6 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   background: #fff;
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 0.2s linear;
-}
-
-.hero-load.is-pending .hero-load-fill {
-  width: 32%;
-  transition: none;
-  animation: hero-load-slide 1.15s ease-in-out infinite;
-}
-
-@keyframes hero-load-slide {
-  0% { transform: translateX(-120%); }
-  100% { transform: translateX(340%); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero-load.is-pending .hero-load-fill {
-    width: 100%;
-    animation: none;
-    transform: scaleX(0.35);
-  }
 }
 
 .hero-overlay {
