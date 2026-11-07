@@ -285,7 +285,7 @@ body:has(.product-page) .brand-logo img {
 body:has(.product-page) .product-overview {
   width: 100%;
   padding: 0 0 16px;
-  gap: 22px;
+  gap: 8px;
 }
 
 body:has(.product-page) .product-purchase {
@@ -303,7 +303,17 @@ body:has(.product-page) .product-purchase {
 }
 
 .product-purchase h1 {
+  margin: 4px 0 2px;
   font-size: 30px;
+}
+
+.product-price {
+  margin: 6px 0 8px;
+}
+
+.option-field {
+  gap: 6px;
+  padding: 0 0 12px;
 }
 
 .product-details {

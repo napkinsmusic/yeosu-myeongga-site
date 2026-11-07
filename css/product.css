@@ -184,11 +184,11 @@
   position: sticky;
   top: calc(var(--header-h) + 40px);
   align-self: start;
-  padding-top: 10px;
+  padding-top: 4px;
 }
 
 .product-purchase h1 {
-  margin: 12px 0 16px;
+  margin: 6px 0 4px;
   font-size: clamp(30px, 3cqw, 46px);
   font-weight: 500;
   letter-spacing: -0.05em;
@@ -201,11 +201,15 @@
   color: #555;
 }
 
+.product-short-description {
+  margin-bottom: 6px;
+}
+
 .product-price {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin: 36px 0;
+  margin: 8px 0 10px;
 }
 
 .product-price strong {
@@ -218,8 +222,8 @@
 
 .option-field {
   display: grid;
-  gap: 12px;
-  padding: 8px 0 28px;
+  gap: 8px;
+  padding: 0 0 16px;
 }
 
 .option-field label {
