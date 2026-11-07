@@ -146,9 +146,10 @@
     });
 
     const shippingFee = getShippingFee(productsTotal);
+    const shippingElement = document.querySelector('[data-cart-shipping]');
     document.querySelector('[data-cart-products-total]').textContent = formatWon(productsTotal);
-    document.querySelector('[data-cart-shipping]').textContent =
-      shippingFee === 0 ? '무료배송' : formatWon(shippingFee);
+    shippingElement.textContent = shippingFee === 0 ? '무료배송' : formatWon(shippingFee);
+    shippingElement.classList.toggle('is-free', shippingFee === 0);
     document.querySelector('[data-cart-total]').textContent = formatWon(productsTotal + shippingFee);
   }
 

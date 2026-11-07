@@ -47,6 +47,10 @@
   padding: 8px 0;
 }
 
+.cart-summary [data-cart-shipping].is-free {
+  color: #1d7a3a;
+}
+
 .cart-summary .checkout-final {
   margin-top: 8px;
   padding-top: 12px;
