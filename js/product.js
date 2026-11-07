@@ -118,22 +118,28 @@
   const optionField = document.querySelector('[data-product-options]');
   const optionSelect = document.querySelector('[data-product-option]');
 
-  function formatOptionPrice(option) {
-    return `${formatWon(option.price)} (${option.label})`;
+  function appendOptionPrice(option) {
+    const salePrice = document.createElement('strong');
+    salePrice.textContent = formatWon(option.price);
+    priceContainer.append(salePrice);
+    if (option.note) {
+      const note = document.createElement('span');
+      note.className = 'product-price-note';
+      note.textContent = `(${option.note})`;
+      priceContainer.append(note);
+      return;
+    }
+    salePrice.textContent = `${formatWon(option.price)} (${option.label})`;
   }
 
   function renderPrice() {
     priceContainer.replaceChildren();
     if (selectedOption) {
-      const salePrice = document.createElement('strong');
-      salePrice.textContent = formatOptionPrice(selectedOption);
-      priceContainer.append(salePrice);
+      appendOptionPrice(selectedOption);
       return;
     }
     if (defaultOption) {
-      const salePrice = document.createElement('strong');
-      salePrice.textContent = formatOptionPrice(defaultOption);
-      priceContainer.append(salePrice);
+      appendOptionPrice(defaultOption);
       return;
     }
     if (temporaryPrice !== null) {
@@ -163,7 +169,9 @@
     productOptions.forEach((option) => {
       const item = document.createElement('option');
       item.value = option.id;
-      item.textContent = `${option.label} — ${formatWon(option.price)}`;
+      item.textContent = option.note
+        ? `${option.label} — ${formatWon(option.price)} (${option.note})`
+        : `${option.label} — ${formatWon(option.price)}`;
       optionSelect.append(item);
     });
     optionSelect.addEventListener('change', () => {
