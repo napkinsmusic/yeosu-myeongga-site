@@ -245,6 +245,14 @@
         { id: '5pc', label: '5개', price: 75000 },
       ],
     },
+    'pollack-roe': {
+      options: [
+        { id: '1pc', label: '1개', price: 9900, note: '10g당 500원' },
+        { id: '2pc', label: '2개', price: 19000 },
+        { id: '3pc', label: '3개', price: 27000 },
+        { id: '5pc', label: '5개', price: 42500 },
+      ],
+    },
     'dolsan-gat-kimchi': {
       options: [
         { id: '1kg', label: '1Kg', price: 12500 },
