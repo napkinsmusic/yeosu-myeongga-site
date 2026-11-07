@@ -188,11 +188,31 @@
 }
 
 .product-purchase h1 {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  column-gap: 0.4em;
   margin: 6px 0 4px;
   font-size: clamp(30px, 3cqw, 46px);
   font-weight: 500;
   letter-spacing: -0.05em;
   line-height: 1.18;
+}
+
+.product-purchase h1 .product-name-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.product-purchase h1 .product-name-note {
+  display: block;
+  margin-top: 0.42em;
+  margin-bottom: 0.12em;
+  font-size: 0.45em;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.25;
 }
 
 .product-short-description,

@@ -112,7 +112,8 @@
 
 .product-purchase h1 .product-name-note {
   display: block;
-  margin-top: 0.12em;
+  margin-top: 0.4em;
+  margin-bottom: 0.1em;
   font-size: 0.42em;
   font-weight: 400;
 }
