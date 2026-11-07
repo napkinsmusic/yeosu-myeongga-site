@@ -44,12 +44,28 @@
 }
 
 .certificate-gallery {
-  gap: 18px;
-  padding: 12px 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  padding: 16px 10px 20px;
 }
 
 .certificate-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
   gap: 6px;
+  width: 100%;
+}
+
+.certificate-row img {
+  display: block;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  flex: none;
+  object-fit: contain;
 }
 
 .thanks-banner {
