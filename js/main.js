@@ -229,15 +229,20 @@ function initHeroVideoLoad() {
   let raf = 0;
 
   video.muted = true;
+  video.defaultMuted = true;
   video.playsInline = true;
+  video.setAttribute('playsinline', '');
+  video.setAttribute('webkit-playsinline', '');
+  video.loop = true;
   video.preload = 'auto';
 
-  const holdUntilBar = () => {
-    if (!done) video.pause();
+  const playVideo = () => {
+    video.muted = true;
+    const play = video.play();
+    if (play && typeof play.catch === 'function') play.catch(() => {});
   };
-  video.addEventListener('playing', holdUntilBar);
-  const startLoad = video.play();
-  if (startLoad && typeof startLoad.catch === 'function') startLoad.catch(() => {});
+
+  playVideo();
 
   const setFill = (ratio) => {
     const value = Math.max(0, Math.min(1, ratio));
@@ -245,21 +250,10 @@ function initHeroVideoLoad() {
     bar.setAttribute('aria-valuenow', String(Math.round(value * 100)));
   };
 
-  const playVideo = () => {
-    const play = video.play();
-    if (play && typeof play.catch === 'function') {
-      play.catch(() => {
-        video.addEventListener('canplay', playVideo, { once: true });
-        video.addEventListener('loadeddata', playVideo, { once: true });
-      });
-    }
-  };
-
   const finish = () => {
     if (done) return;
     done = true;
     cancelAnimationFrame(raf);
-    video.removeEventListener('playing', holdUntilBar);
     setFill(1);
     bar.classList.add('is-done');
     hero?.classList.add('is-playing');
@@ -283,6 +277,7 @@ function initHeroVideoLoad() {
   };
 
   video.addEventListener('error', finish, { once: true });
+  window.addEventListener('pointerdown', playVideo, { once: true, passive: true });
   raf = requestAnimationFrame(tick);
 }
 
