@@ -213,6 +213,13 @@
       name: '민어',
       nameNote: '(스팀으로 찐)',
     },
+    'dolsan-gat-kimchi': {
+      options: [
+        { id: '1kg', label: '1Kg', price: 12500 },
+        { id: '3kg', label: '3Kg', price: 29900 },
+        { id: '5kg', label: '5Kg', price: 46500 },
+      ],
+    },
     'blue-crab-soy-gejang': {
       storageMethod: '냉장보관',
       options: [
