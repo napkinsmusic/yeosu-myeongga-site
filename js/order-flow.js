@@ -460,7 +460,6 @@
       'address-confirm': '[data-order-address-yes]',
       request: '[data-request-option]',
       review: '[data-order-submit]',
-      edit: '[data-order-edit="name"]',
       received: '[data-order-copy-account]',
     };
     const target = $(map[step]);
@@ -1156,7 +1155,6 @@
     $('[data-order-address-yes]', root)?.addEventListener('click', () => afterConfirm('request'));
     $('[data-order-address-edit]', root)?.addEventListener('click', goBack);
     $('[data-order-submit]', root)?.addEventListener('click', submitOrder);
-    $('[data-order-edit-open]', root)?.addEventListener('click', () => goTo('edit'));
     $('[data-order-copy-account]', root)?.addEventListener('click', copyAccountNumber);
     $('[data-order-save-receipt]', root)?.addEventListener('click', saveOrderReceipt);
 
@@ -1171,10 +1169,6 @@
     document.querySelectorAll('[data-request-option]').forEach((button) => {
       button.addEventListener('click', () => selectRequest(button.dataset.requestOption));
     });
-    document.querySelectorAll('[data-order-edit]').forEach((button) => {
-      button.addEventListener('click', () => goTo(button.dataset.orderEdit));
-    });
-
     document.querySelectorAll('[data-order-pay]').forEach((button) => {
       button.addEventListener('click', () => {
         if (button.dataset.orderPay === 'bank') goTo('name');
