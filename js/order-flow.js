@@ -876,7 +876,7 @@
       { label: '배송비', value: summary.shippingFee === 0 ? '무료배송' : formatWon(summary.shippingFee), emphasize: false },
       { label: '입금할 금액', value: formatWon(order?.pricing?.paidAmount ?? summary.paidAmount), emphasize: true },
       { label: '은행명', value: bank.bankName, emphasize: true },
-      { label: '법인 계좌번호', value: bank.accountNumber, emphasize: true },
+      { label: '계좌번호', value: bank.accountNumber, emphasize: true },
       { label: '예금주', value: bank.accountHolder, emphasize: true },
     ];
   }
@@ -884,12 +884,10 @@
   async function buildReceiptBlob() {
     const order = state.receivedOrder;
     const width = 1080;
-    const padding = 56;
+    const padding = 48;
     const contentWidth = width - padding * 2;
-    const labelWidth = 300;
-    const gap = 28;
-    const valueWidth = contentWidth - labelWidth - gap;
-    const valueX = padding + labelWidth + gap;
+    const rightX = width - padding;
+    const valueMaxWidth = Math.floor(contentWidth * 0.62);
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('canvas');
@@ -911,14 +909,14 @@
     const rows = receiptRows(order);
     const measured = rows.map((row) => {
       const valueFont = row.emphasize
-        ? '800 46px Pretendard, "Noto Sans KR", sans-serif'
-        : '700 34px Pretendard, "Noto Sans KR", sans-serif';
-      const lineHeight = row.emphasize ? 56 : 42;
+        ? '800 54px Pretendard, "Noto Sans KR", sans-serif'
+        : '700 32px Pretendard, "Noto Sans KR", sans-serif';
+      const lineHeight = row.emphasize ? 64 : 40;
       ctx.font = valueFont;
       const valueLines = String(row.value || '')
         .split('\n')
-        .flatMap((part) => wrapCanvasText(ctx, part, valueWidth));
-      const rowHeight = Math.max(lineHeight, valueLines.length * lineHeight) + (row.emphasize ? 28 : 18);
+        .flatMap((part) => wrapCanvasText(ctx, part, valueMaxWidth));
+      const rowHeight = Math.max(lineHeight, valueLines.length * lineHeight) + (row.emphasize ? 36 : 22);
       return {
         ...row,
         valueFont,
@@ -930,9 +928,9 @@
 
     const titleBlock = 66 + 48;
     const rowBlock = measured.reduce((sum, row) => sum + row.rowHeight, 0);
-    const paymentPad = 40;
-    const logoBlock = logo ? 36 + logoDrawHeight : 0;
-    const height = Math.ceil(padding + titleBlock + paymentPad + rowBlock + logoBlock + padding + 24);
+    const paymentPad = 48;
+    const logoBlock = logo ? 40 + logoDrawHeight : 0;
+    const height = Math.ceil(padding + titleBlock + paymentPad + rowBlock + logoBlock + padding + 32);
 
     canvas.width = width;
     canvas.height = height;
@@ -954,43 +952,44 @@
     measured.forEach((row, index) => {
       if (row.emphasize && !paymentBandStarted) {
         paymentBandStarted = true;
-        y += 10;
-        ctx.fillStyle = '#f4faf5';
+        y += 18;
+        ctx.fillStyle = '#eef8f0';
         const remaining = measured.slice(index).filter((item) => item.emphasize);
-        const bandHeight = remaining.reduce((sum, item) => sum + item.rowHeight, 0) + 24;
-        ctx.fillRect(padding - 12, y - 8, contentWidth + 24, bandHeight);
+        const bandHeight = remaining.reduce((sum, item) => sum + item.rowHeight, 0) + 28;
+        ctx.fillRect(padding - 16, y - 10, contentWidth + 32, bandHeight);
       }
 
       const labelFont = row.emphasize
-        ? '800 32px Pretendard, "Noto Sans KR", sans-serif'
+        ? '800 36px Pretendard, "Noto Sans KR", sans-serif'
         : '700 28px Pretendard, "Noto Sans KR", sans-serif';
-      const labelColor = row.emphasize ? '#1f7a33' : '#666666';
-      const valueColor = '#111111';
-      const textTop = y + (row.emphasize ? 40 : 30);
+      const labelColor = row.emphasize ? '#1b6b2e' : '#666666';
+      const valueColor = row.emphasize ? '#111111' : '#111111';
+      const textTop = y + (row.emphasize ? 48 : 30);
 
       ctx.textAlign = 'left';
       ctx.fillStyle = labelColor;
       ctx.font = labelFont;
       ctx.fillText(row.label, padding, textTop);
 
+      ctx.textAlign = 'right';
       ctx.fillStyle = valueColor;
       ctx.font = row.valueFont;
       row.valueLines.forEach((line, lineIndex) => {
-        ctx.fillText(line, valueX, textTop + lineIndex * row.lineHeight);
+        ctx.fillText(line, rightX, textTop + lineIndex * row.lineHeight);
       });
 
       y += row.rowHeight;
       if (!row.emphasize) {
-        ctx.strokeStyle = '#eeeeee';
+        ctx.strokeStyle = '#ececec';
         ctx.beginPath();
-        ctx.moveTo(padding, y - 8);
-        ctx.lineTo(width - padding, y - 8);
+        ctx.moveTo(padding, y - 10);
+        ctx.lineTo(rightX, y - 10);
         ctx.stroke();
       }
     });
 
     if (logo) {
-      y += 36;
+      y += 40;
       ctx.drawImage(
         logo,
         (width - logoDrawWidth) / 2,
