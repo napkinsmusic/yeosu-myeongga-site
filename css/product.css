@@ -938,9 +938,15 @@
 .order-step-field {
   display: grid;
   gap: 8px;
+  padding: 12px;
+  border: 2px solid #2f9e44;
+  border-radius: 14px;
+  background: rgba(47, 158, 68, 0.06);
+  animation: order-input-guide-in 0.45s ease;
 }
 
 .order-step-field > span {
+  color: #1f7a33;
   font-size: 13px;
   font-weight: 700;
 }
@@ -949,7 +955,7 @@
   width: 100%;
   min-height: 52px;
   padding: 12px 14px;
-  border: 1px solid #ccc;
+  border: 1px solid #2f9e44;
   border-radius: 12px;
   background: #fff;
   font-size: 18px;
@@ -957,37 +963,28 @@
 }
 
 .order-step-field input::placeholder {
-  color: #bbb;
+  color: #9bc7a4;
   font-weight: 400;
   opacity: 1;
 }
 
 .order-step-field input:focus {
-  border-color: #111;
-}
-
-[data-order-address-more].is-detail-highlight {
-  margin-top: 4px;
-  padding: 12px;
-  border: 2px solid #2f9e44;
-  border-radius: 14px;
-  background: rgba(47, 158, 68, 0.06);
-  animation: order-detail-highlight-in 0.45s ease;
-}
-
-[data-order-address-more].is-detail-highlight > .order-step-field > span {
-  color: #1f7a33;
-}
-
-[data-order-address-more].is-detail-highlight input,
-[data-order-address-more].is-detail-highlight input:focus {
   border-color: #2f9e44;
   outline: 3px solid rgba(47, 158, 68, 0.28);
   outline-offset: 1px;
   box-shadow: none;
 }
 
-@keyframes order-detail-highlight-in {
+[data-order-address-search].is-input-guide {
+  border-color: #2f9e44;
+  color: #1f7a33;
+  outline: 3px solid rgba(47, 158, 68, 0.28);
+  outline-offset: 2px;
+  background: rgba(47, 158, 68, 0.06);
+  animation: order-input-guide-in 0.45s ease;
+}
+
+@keyframes order-input-guide-in {
   from {
     opacity: 0.55;
     transform: translateY(4px);

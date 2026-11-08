@@ -201,6 +201,7 @@
     if (dialog) dialog.scrollTop = 0;
     if (back) back.hidden = hideBack;
     setError('');
+    updateAddressSearchGuide();
   }
 
   function fillFields() {
@@ -423,6 +424,15 @@
 
   function setDetailAddressHighlight(on) {
     $('[data-order-address-more]')?.classList.toggle('is-detail-highlight', Boolean(on));
+    updateAddressSearchGuide();
+  }
+
+  function updateAddressSearchGuide() {
+    const search = $('[data-order-address-search]');
+    if (!search) return;
+    const needsAddress = !readDraft().address1;
+    const onAddressStep = currentStep() === 'address';
+    search.classList.toggle('is-input-guide', onAddressStep && needsAddress);
   }
 
   function goTo(step) {
