@@ -34,7 +34,7 @@
   function getBank() {
     const shop = global.SHOP_CONFIG ?? {};
     return {
-      bankName: shop.bankName || '농협은행',
+      bankName: shop.bankName || '기업은행',
       accountNumber: shop.bankAccountNumber || '000-0000-0000-00',
       accountHolder: shop.bankAccountHolder || '(주)전남산업콘텐츠연구원',
     };
