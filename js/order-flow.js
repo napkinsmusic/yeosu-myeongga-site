@@ -866,26 +866,30 @@
     ].filter(Boolean).join(' ');
     const productLines = (summary.items || []).map((item) => `${item.label} · ${item.quantity}개`);
     return [
-      ['주문번호', order?.orderNumber || '-'],
-      ['상품', productLines.length ? productLines.join('\n') : (productLabel || '-')],
-      ['수량', `${summary.quantity}개`],
-      ['이름', draft.customerName || order?.customer?.name || '-'],
-      ['연락처', draft.customerPhone || order?.customer?.phone || '-'],
-      ['배송지', address || '-'],
-      ['요청사항', requestLabel(draft)],
-      ['배송비', summary.shippingFee === 0 ? '무료배송' : formatWon(summary.shippingFee)],
-      ['입금할 금액', formatWon(order?.pricing?.paidAmount ?? summary.paidAmount)],
-      ['은행명', bank.bankName],
-      ['법인 계좌번호', bank.accountNumber],
-      ['예금주', bank.accountHolder],
+      { label: '주문번호', value: order?.orderNumber || '-', emphasize: false },
+      { label: '상품', value: productLines.length ? productLines.join('\n') : (productLabel || '-'), emphasize: false },
+      { label: '수량', value: `${summary.quantity}개`, emphasize: false },
+      { label: '이름', value: draft.customerName || order?.customer?.name || '-', emphasize: false },
+      { label: '연락처', value: draft.customerPhone || order?.customer?.phone || '-', emphasize: false },
+      { label: '배송지', value: address || '-', emphasize: false },
+      { label: '요청사항', value: requestLabel(draft), emphasize: false },
+      { label: '배송비', value: summary.shippingFee === 0 ? '무료배송' : formatWon(summary.shippingFee), emphasize: false },
+      { label: '입금할 금액', value: formatWon(order?.pricing?.paidAmount ?? summary.paidAmount), emphasize: true },
+      { label: '은행명', value: bank.bankName, emphasize: true },
+      { label: '법인 계좌번호', value: bank.accountNumber, emphasize: true },
+      { label: '예금주', value: bank.accountHolder, emphasize: true },
     ];
   }
 
   async function buildReceiptBlob() {
     const order = state.receivedOrder;
     const width = 1080;
-    const padding = 72;
+    const padding = 56;
     const contentWidth = width - padding * 2;
+    const labelWidth = 300;
+    const gap = 28;
+    const valueWidth = contentWidth - labelWidth - gap;
+    const valueX = padding + labelWidth + gap;
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     if (!ctx) throw new Error('canvas');
@@ -900,26 +904,35 @@
     let logoDrawWidth = 0;
     let logoDrawHeight = 0;
     if (logo) {
-      logoDrawWidth = Math.min(logo.width * (120 / logo.height), 360);
+      logoDrawWidth = Math.min(logo.width * (110 / logo.height), 320);
       logoDrawHeight = logo.height * (logoDrawWidth / logo.width);
     }
 
     const rows = receiptRows(order);
-    const measured = [];
-    rows.forEach(([label, value]) => {
-      ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
-      const valueLines = String(value || '')
+    const measured = rows.map((row) => {
+      const valueFont = row.emphasize
+        ? '800 46px Pretendard, "Noto Sans KR", sans-serif'
+        : '700 34px Pretendard, "Noto Sans KR", sans-serif';
+      const lineHeight = row.emphasize ? 56 : 42;
+      ctx.font = valueFont;
+      const valueLines = String(row.value || '')
         .split('\n')
-        .flatMap((part) => wrapCanvasText(ctx, part, contentWidth));
-      measured.push({ label, valueLines });
+        .flatMap((part) => wrapCanvasText(ctx, part, valueWidth));
+      const rowHeight = Math.max(lineHeight, valueLines.length * lineHeight) + (row.emphasize ? 28 : 18);
+      return {
+        ...row,
+        valueFont,
+        lineHeight,
+        valueLines,
+        rowHeight,
+      };
     });
 
-    const titleBlock = 70 + 56;
-    const rowBlock = measured.reduce((sum, row) => (
-      sum + 34 + (row.valueLines.length * 44) + 18 + 22
-    ), 0);
-    const logoBlock = logo ? 40 + logoDrawHeight : 0;
-    const height = Math.ceil(padding + titleBlock + rowBlock + logoBlock + padding);
+    const titleBlock = 66 + 48;
+    const rowBlock = measured.reduce((sum, row) => sum + row.rowHeight, 0);
+    const paymentPad = 40;
+    const logoBlock = logo ? 36 + logoDrawHeight : 0;
+    const height = Math.ceil(padding + titleBlock + paymentPad + rowBlock + logoBlock + padding + 24);
 
     canvas.width = width;
     canvas.height = height;
@@ -930,36 +943,54 @@
     let y = padding;
     ctx.fillStyle = '#111111';
     ctx.textAlign = 'center';
-    ctx.font = '800 54px Pretendard, "Noto Sans KR", sans-serif';
-    ctx.fillText('여수명가', width / 2, y + 54);
-    y += 70;
-    ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
-    ctx.fillText('주문 확인서', width / 2, y + 34);
-    y += 56;
+    ctx.font = '800 50px Pretendard, "Noto Sans KR", sans-serif';
+    ctx.fillText('여수명가', width / 2, y + 50);
+    y += 66;
+    ctx.font = '700 32px Pretendard, "Noto Sans KR", sans-serif';
+    ctx.fillText('주문 확인서', width / 2, y + 32);
+    y += 48;
 
-    ctx.textAlign = 'left';
-    measured.forEach((row) => {
-      ctx.fillStyle = '#777777';
-      ctx.font = '700 26px Pretendard, "Noto Sans KR", sans-serif';
-      ctx.fillText(row.label, padding, y + 26);
-      y += 34;
-      ctx.fillStyle = '#111111';
-      ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
-      row.valueLines.forEach((line) => {
-        ctx.fillText(line, padding, y + 34);
-        y += 44;
+    let paymentBandStarted = false;
+    measured.forEach((row, index) => {
+      if (row.emphasize && !paymentBandStarted) {
+        paymentBandStarted = true;
+        y += 10;
+        ctx.fillStyle = '#f4faf5';
+        const remaining = measured.slice(index).filter((item) => item.emphasize);
+        const bandHeight = remaining.reduce((sum, item) => sum + item.rowHeight, 0) + 24;
+        ctx.fillRect(padding - 12, y - 8, contentWidth + 24, bandHeight);
+      }
+
+      const labelFont = row.emphasize
+        ? '800 32px Pretendard, "Noto Sans KR", sans-serif'
+        : '700 28px Pretendard, "Noto Sans KR", sans-serif';
+      const labelColor = row.emphasize ? '#1f7a33' : '#666666';
+      const valueColor = '#111111';
+      const textTop = y + (row.emphasize ? 40 : 30);
+
+      ctx.textAlign = 'left';
+      ctx.fillStyle = labelColor;
+      ctx.font = labelFont;
+      ctx.fillText(row.label, padding, textTop);
+
+      ctx.fillStyle = valueColor;
+      ctx.font = row.valueFont;
+      row.valueLines.forEach((line, lineIndex) => {
+        ctx.fillText(line, valueX, textTop + lineIndex * row.lineHeight);
       });
-      y += 18;
-      ctx.strokeStyle = '#eeeeee';
-      ctx.beginPath();
-      ctx.moveTo(padding, y);
-      ctx.lineTo(width - padding, y);
-      ctx.stroke();
-      y += 22;
+
+      y += row.rowHeight;
+      if (!row.emphasize) {
+        ctx.strokeStyle = '#eeeeee';
+        ctx.beginPath();
+        ctx.moveTo(padding, y - 8);
+        ctx.lineTo(width - padding, y - 8);
+        ctx.stroke();
+      }
     });
 
     if (logo) {
-      y += 40;
+      y += 36;
       ctx.drawImage(
         logo,
         (width - logoDrawWidth) / 2,
