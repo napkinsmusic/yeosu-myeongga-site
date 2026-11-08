@@ -1150,7 +1150,10 @@
 
 .order-farewell-message span {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 14px;
+  font-size: clamp(26px, 7vw, 32px);
+  font-weight: 800;
+  letter-spacing: -0.05em;
 }
 
 [data-order-address-more][hidden],
