@@ -156,20 +156,92 @@
     priceContainer.append(salePrice);
   }
 
+  function readSelectedOption() {
+    if (!hasOptions) return null;
+    selectedOption = productOptions.find((option) => option.id === optionSelect.value) ?? null;
+    return selectedOption;
+  }
+
+  let optionToggle = null;
+
   if (hasOptions) {
     optionField.hidden = false;
+    const picker = document.createElement('div');
+    picker.className = 'option-picker';
+    optionToggle = document.createElement('button');
+    optionToggle.type = 'button';
+    optionToggle.id = 'product-option-toggle';
+    optionToggle.className = 'option-toggle';
+    optionToggle.textContent = '선택해 주세요';
+    optionToggle.setAttribute('aria-haspopup', 'listbox');
+    optionToggle.setAttribute('aria-expanded', 'false');
+    document.querySelector('.option-field label')?.setAttribute('for', optionToggle.id);
+
+    const menu = document.createElement('div');
+    menu.className = 'option-menu';
+    menu.hidden = true;
+    menu.setAttribute('role', 'listbox');
+    menu.setAttribute('aria-label', '필수 선택');
+
+    const closeOptionMenu = () => {
+      menu.hidden = true;
+      optionToggle.setAttribute('aria-expanded', 'false');
+    };
+
+    const applyOptionChange = () => {
+      readSelectedOption();
+      optionToggle.textContent = selectedOption
+        ? `${selectedOption.label} — ${formatWon(selectedOption.price)}`
+        : '선택해 주세요';
+      menu.querySelectorAll('[data-option-id]').forEach((choice) => {
+        const selected = choice.dataset.optionId === selectedOption?.id;
+        choice.classList.toggle('is-selected', selected);
+        choice.setAttribute('aria-selected', selected ? 'true' : 'false');
+      });
+      if (selectedOption) {
+        optionSelect.classList.remove('is-invalid');
+        optionToggle.classList.remove('is-invalid');
+      }
+      renderPrice();
+      updateQuantity(quantity);
+    };
+
     productOptions.forEach((option) => {
       const item = document.createElement('option');
       item.value = option.id;
       item.textContent = `${option.label} — ${formatWon(option.price)}`;
       optionSelect.append(item);
+
+      const choice = document.createElement('button');
+      choice.type = 'button';
+      choice.className = 'option-choice';
+      choice.dataset.optionId = option.id;
+      choice.setAttribute('role', 'option');
+      choice.setAttribute('aria-selected', 'false');
+      choice.textContent = `${option.label} — ${formatWon(option.price)}`;
+      choice.addEventListener('click', () => {
+        optionSelect.value = option.id;
+        applyOptionChange();
+        closeOptionMenu();
+      });
+      menu.append(choice);
     });
-    optionSelect.addEventListener('change', () => {
-      selectedOption = productOptions.find((option) => option.id === optionSelect.value) ?? null;
-      optionSelect.classList.toggle('is-invalid', !selectedOption);
-      renderPrice();
-      updateQuantity(quantity);
+
+    optionToggle.addEventListener('click', () => {
+      const willOpen = menu.hidden;
+      menu.hidden = !willOpen;
+      optionToggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
     });
+    document.addEventListener('click', (event) => {
+      if (!picker.contains(event.target)) closeOptionMenu();
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') closeOptionMenu();
+    });
+    optionSelect.addEventListener('change', applyOptionChange);
+    optionSelect.addEventListener('input', applyOptionChange);
+    picker.append(optionToggle, menu);
+    optionField.append(picker);
   }
 
   renderPrice();
@@ -426,9 +498,11 @@
     quantityInput.disabled = true;
   } else {
     const requireOption = () => {
+      if (hasOptions) readSelectedOption();
       if (hasOptions && !selectedOption) {
         optionSelect.classList.add('is-invalid');
-        optionSelect.focus();
+        optionToggle?.classList.add('is-invalid');
+        (optionToggle || optionSelect).focus();
         const message = '옵션을 선택해 주세요.';
         actionMessage.textContent = message;
         window.YEOSU_UI?.showMessage(message, 'info');
@@ -443,10 +517,21 @@
       quantity,
     });
 
-    const buyNow = () => {
+    const buyNow = (event) => {
       if (!requireOption()) return;
+      if (getUnitPrice() === null) {
+        const message = '가격 준비 중인 상품입니다.';
+        actionMessage.textContent = message;
+        window.YEOSU_UI?.showMessage(message, 'info');
+        return;
+      }
       window.YEOSU_PURCHASE.setItem(currentItem());
-      window.location.href = './checkout.html';
+      window.YEOSU_ORDER_FLOW.open({
+        trigger: event.currentTarget,
+        product,
+        option: selectedOption,
+        quantity,
+      });
     };
 
     const addToCart = () => {
@@ -479,9 +564,9 @@
       if (event.target === paymentModal) closePaymentModal();
     });
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'Escape' && paymentModal.classList.contains('is-open')) {
-        closePaymentModal();
-      }
+      if (event.key !== 'Escape') return;
+      if (document.querySelector('[data-order-step-modal]')?.classList.contains('is-open')) return;
+      if (paymentModal.classList.contains('is-open')) closePaymentModal();
     });
   }
 

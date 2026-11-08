@@ -472,16 +472,14 @@ body:has(.product-page) .site-footer {
   font-size: 19px;
 }
 
-.option-field select {
+.option-toggle {
   min-height: 72px;
   font-size: 19px;
 }
 
-.option-field select.is-invalid,
-.option-field select.is-invalid:focus {
-  border-color: #e89a9a;
-  outline: 3px solid #f4c7c7;
-  outline-offset: 2px;
+.option-choice {
+  min-height: 52px;
+  font-size: 17px;
 }
 
 .product-meta > div,

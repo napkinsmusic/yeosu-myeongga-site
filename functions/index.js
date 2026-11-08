@@ -125,7 +125,7 @@ function normalizeOrderPayload(data) {
     customer: {
       name: requireText(customer.name, '주문자 이름', 50),
       phone: normalizePhone(customer.phone, '주문자 연락처'),
-      email: normalizeEmail(customer.email),
+      email: optionalText(customer.email, 254) ? normalizeEmail(customer.email) : '',
     },
     shippingAddress: {
       receiver: requireText(shippingAddress.receiver, '받는 사람', 50),

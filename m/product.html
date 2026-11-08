@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="description" content="여수명가 상품 상세정보" />
   <title>상품 상세 | 여수명가</title>
-  <link rel="stylesheet" href="../css/style.css?v=9" />
-  <link rel="stylesheet" href="../css/product.css?v=11" />
+  <link rel="stylesheet" href="../css/style.css?v=10" />
+  <link rel="stylesheet" href="../css/product.css?v=20" />
   <link rel="stylesheet" href="../css/cart.css?v=4" />
-  <link rel="stylesheet" href="./css/mobile.css?v=36" />
+  <link rel="stylesheet" href="./css/mobile.css?v=37" />
   <script>window.YEOSU_ASSET_ROOT = "../";</script>
 </head>
 <body class="subpage has-photo-logo">
@@ -244,6 +244,121 @@
     <span class="kakao-fab-label">카톡문의</span>
   </button>
 
+  <div class="order-step-modal" aria-hidden="true" data-order-step-modal>
+    <div class="order-step-dialog" role="dialog" aria-modal="true" aria-labelledby="order-step-title">
+      <button class="sms-modal-close" type="button" aria-label="닫기" data-order-step-close>×</button>
+
+      <section data-order-step="name">
+        <form data-order-name-form>
+          <h2 id="order-step-title">고객님, 성함을 알려주세요.</h2>
+          <label class="order-step-field">
+            <input name="customerName" type="text" autocomplete="name" maxlength="50" data-order-name-input />
+          </label>
+          <p class="order-step-error" role="alert" data-order-step-error></p>
+          <button class="purchase-button primary order-step-next" type="submit">확인</button>
+        </form>
+      </section>
+
+      <section data-order-step="phone" hidden>
+        <form data-order-phone-form>
+          <p class="order-step-thanks" data-order-phone-greeting></p>
+          <h2>연락받으실 전화번호를 입력해 주세요.</h2>
+          <label class="order-step-field">
+            <input name="customerPhone" type="tel" autocomplete="tel" inputmode="tel" maxlength="13" data-order-phone-input />
+          </label>
+          <p class="order-step-error" role="alert" data-order-step-error></p>
+          <button class="purchase-button primary order-step-next" type="submit">확인</button>
+        </form>
+      </section>
+
+      <section data-order-step="address" hidden>
+        <form data-order-address-form>
+          <h2>어디로 보내드릴까요?</h2>
+          <button class="purchase-button secondary order-step-next" type="button" data-order-address-search>주소 찾기</button>
+          <p class="order-step-error" role="alert" data-order-step-error></p>
+          <div class="order-address-preview" data-order-address-preview hidden>
+            <p data-order-address-text></p>
+          </div>
+          <div data-order-address-more hidden>
+            <label class="order-step-field">
+              <span>상세주소</span>
+              <input name="address2" type="text" autocomplete="address-line2" maxlength="200" data-order-address2-input />
+            </label>
+            <button class="purchase-button primary order-step-next" type="submit">확인</button>
+          </div>
+        </form>
+      </section>
+
+      <section data-order-step="address-confirm" hidden>
+        <h2>이 주소가 맞으신가요?</h2>
+        <p class="order-address-confirm" data-order-address-confirm-text></p>
+        <button class="purchase-button primary order-step-next" type="button" data-order-address-yes>네, 맞아요</button>
+        <button class="purchase-button secondary order-step-next" type="button" data-order-address-edit>주소 수정하기</button>
+      </section>
+
+      <section data-order-step="request" hidden>
+        <h2>배송 기사님께 부탁하실 말씀이 있나요?</h2>
+        <div class="order-choice-list">
+          <button class="order-choice" type="button" data-request-option="door">문 앞에 놓아주세요</button>
+          <button class="order-choice" type="button" data-request-option="call">배송 전에 연락해 주세요</button>
+          <button class="order-choice" type="button" data-request-option="guard">경비실에 맡겨 주세요</button>
+          <button class="order-choice" type="button" data-request-option="none">요청사항 없어요</button>
+          <button class="order-choice" type="button" data-request-option="direct">직접 입력할게요</button>
+        </div>
+        <form data-order-request-direct-form>
+          <label class="order-step-field" data-order-request-direct-field hidden>
+            <span>요청사항 직접 입력</span>
+            <input name="shippingRequestDirect" type="text" maxlength="100" data-order-request-direct />
+          </label>
+          <p class="order-step-error" role="alert" data-order-step-error></p>
+          <button class="purchase-button primary order-step-next" type="submit" data-order-request-direct-submit hidden>확인</button>
+        </form>
+      </section>
+
+      <section data-order-step="review" hidden>
+        <h2>이대로 주문해 드릴까요?</h2>
+        <dl class="order-review">
+          <div><dt>상품</dt><dd data-review-product></dd></div>
+          <div><dt>수량</dt><dd data-review-quantity></dd></div>
+          <div><dt>이름</dt><dd data-review-name></dd></div>
+          <div><dt>연락처</dt><dd data-review-phone></dd></div>
+          <div><dt>배송지</dt><dd data-review-address></dd></div>
+          <div><dt>요청사항</dt><dd data-review-request></dd></div>
+          <div><dt>배송비</dt><dd data-review-shipping></dd></div>
+          <div class="order-review-total"><dt>총액</dt><dd data-review-total></dd></div>
+        </dl>
+        <p class="order-step-error" role="alert" data-order-step-error></p>
+        <button class="purchase-button primary order-step-next" type="button" data-order-submit>네, 주문할게요</button>
+        <button class="purchase-button secondary order-step-next" type="button" data-order-edit-open>수정할게요</button>
+      </section>
+
+      <section data-order-step="edit" hidden>
+        <h2>수정할 항목을 선택해 주세요.</h2>
+        <div class="order-choice-list">
+          <button class="order-choice" type="button" data-order-edit="name">이름</button>
+          <button class="order-choice" type="button" data-order-edit="phone">연락처</button>
+          <button class="order-choice" type="button" data-order-edit="address">배송지</button>
+          <button class="order-choice" type="button" data-order-edit="request">요청사항</button>
+        </div>
+      </section>
+
+      <section data-order-step="received" hidden>
+        <h2>주문을 입금 대기로 받아 두었습니다.</h2>
+        <dl class="order-review">
+          <div><dt>주문번호</dt><dd data-received-order-number></dd></div>
+          <div class="order-review-total"><dt>입금할 금액</dt><dd data-received-amount></dd></div>
+          <div><dt>은행명</dt><dd data-received-bank></dd></div>
+          <div><dt>법인 계좌번호</dt><dd data-received-account></dd></div>
+          <div><dt>예금주</dt><dd data-received-holder></dd></div>
+        </dl>
+        <button class="purchase-button primary order-step-next" type="button" data-order-copy-account>계좌번호 복사</button>
+        <p class="order-copy-message" data-order-copy-message></p>
+      </section>
+
+      <button class="order-step-back" type="button" data-order-prev hidden>이전 단계</button>
+    </div>
+  </div>
+
   <div class="payment-soon-modal" aria-hidden="true" data-payment-modal>
     <div class="payment-soon-dialog" role="dialog" aria-modal="true" aria-labelledby="payment-soon-title">
       <button class="sms-modal-close" type="button" aria-label="결제 안내 닫기" data-payment-close>×</button>
@@ -265,12 +380,15 @@
   </footer>
 
   <script src="../js/products.js?v=17"></script>
-  <script src="../js/store-config.js"></script>
+  <script src="../js/store-config.js?v=2"></script>
   <script src="../js/firebase/firebase-config.js"></script>
   <script src="../js/services/product-service.js"></script>
   <script src="../js/cart-service.js"></script>
   <script src="../js/purchase-service.js?v=3"></script>
+  <script src="../js/services/order-service.js"></script>
   <script src="../js/main.js?v=6"></script>
-  <script src="../js/product.js?v=17"></script>
+  <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" data-postcode-script></script>
+  <script src="../js/order-flow.js?v=7"></script>
+  <script src="../js/product.js?v=22"></script>
 </body>
 </html>

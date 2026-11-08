@@ -1,6 +1,6 @@
 (function initializeAdminOrderService(global) {
   const ORDER_STATUS_LABELS = Object.freeze({
-    PENDING_PAYMENT: '결제대기',
+    PENDING_PAYMENT: '입금 대기',
     PAID: '결제완료',
     PREPARING: '배송준비',
     SHIPPED: '배송중',

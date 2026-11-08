@@ -12,5 +12,9 @@
     shippingFreeFrom: 70000,
     shippingFee: 3000,
     shippingNotice: '3,000원 | 7만원 이상 구매 시 무료',
+
+    bankName: '농협은행',
+    bankAccountNumber: '000-0000-0000-00',
+    bankAccountHolder: '(주)전남산업콘텐츠연구원',
   });
 })(window);
