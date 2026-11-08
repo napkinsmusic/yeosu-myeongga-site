@@ -235,7 +235,7 @@
 
   function updateThanksMessage(name) {
     const message = $('[data-order-thanks-message]');
-    if (message) message.textContent = name ? `감사합니다, ${name} 고객님!` : '감사합니다.';
+    if (message) message.textContent = name ? `반갑습니다, ${name} 고객님!` : '반갑습니다.';
   }
 
   function clearThanksTimer() {
