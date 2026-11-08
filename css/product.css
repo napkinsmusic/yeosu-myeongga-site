@@ -1116,6 +1116,43 @@
   display: none;
 }
 
+[data-order-step="farewell"] {
+  min-height: 180px;
+  display: grid;
+  place-items: center;
+  padding: 12px 4px 8px;
+}
+
+[data-order-step="farewell"][hidden] {
+  display: none;
+}
+
+.order-farewell-message {
+  margin: 0;
+  color: #111;
+  font-size: clamp(20px, 5.6vw, 24px);
+  font-weight: 800;
+  line-height: 1.55;
+  letter-spacing: -0.05em;
+  text-align: center;
+  word-break: keep-all;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.order-farewell-message.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+.order-farewell-message span {
+  display: inline-block;
+  margin-top: 10px;
+}
+
 [data-order-address-more][hidden],
 [data-order-request-direct-field][hidden],
 [data-order-request-direct-submit][hidden] {

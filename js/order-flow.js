@@ -145,6 +145,7 @@
     postcodeListening: false,
     postcodeApplying: false,
     thanksTimer: null,
+    farewellTimer: null,
   };
 
   function decodePostcodePayload(raw) {
@@ -193,7 +194,7 @@
       panel.hidden = panel.dataset.orderStep !== step;
     });
     const back = $('[data-order-prev]');
-    const hideBack = step === 'pay' || step === 'thanks' || step === 'received';
+    const hideBack = step === 'pay' || step === 'thanks' || step === 'received' || step === 'farewell';
     const dialog = $('.order-step-dialog', modal());
     dialog?.setAttribute('aria-labelledby', step === 'pay' ? 'order-pay-title' : 'order-step-title');
     if (dialog) dialog.scrollTop = 0;
@@ -451,7 +452,9 @@
 
   function closeFlow() {
     clearThanksTimer();
+    clearFarewellTimer();
     resetThanksMessage();
+    resetFarewellMessage();
     closePostcodeLayer();
     closeCardSoon();
     const root = modal();
@@ -466,7 +469,9 @@
 
   function openFlow({ trigger, product, option = null, quantity = 1 }) {
     clearThanksTimer();
+    clearFarewellTimer();
     resetThanksMessage();
+    resetFarewellMessage();
     state.product = product;
     state.option = option;
     state.quantity = Math.max(Number.parseInt(quantity, 10) || 1, 1);
@@ -705,12 +710,36 @@
     afterConfirm('review');
   }
 
+  function clearFarewellTimer() {
+    if (state.farewellTimer) {
+      window.clearTimeout(state.farewellTimer);
+      state.farewellTimer = null;
+    }
+  }
+
+  function resetFarewellMessage() {
+    $('[data-order-farewell-message]')?.classList.remove('is-visible');
+  }
+
+  function showFarewellMessage() {
+    clearFarewellTimer();
+    resetFarewellMessage();
+    goTo('farewell');
+    const message = $('[data-order-farewell-message]');
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        message?.classList.add('is-visible');
+      });
+    });
+  }
+
   async function copyAccountNumber() {
     const { accountNumber } = getBank();
     const note = $('[data-order-copy-message]');
     try {
       await navigator.clipboard.writeText(accountNumber);
       if (note) note.textContent = '계좌번호를 복사했습니다.';
+      showFarewellMessage();
     } catch {
       if (note) note.textContent = `복사에 실패했습니다. ${accountNumber}`;
     }
