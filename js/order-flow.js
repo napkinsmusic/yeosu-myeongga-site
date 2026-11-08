@@ -136,7 +136,7 @@
 
   const state = {
     open: false,
-    history: ['name'],
+    history: ['pay'],
     returnFocus: null,
     product: null,
     option: null,
@@ -144,6 +144,7 @@
     submitting: false,
     postcodeListening: false,
     postcodeApplying: false,
+    thanksTimer: null,
   };
 
   function decodePostcodePayload(raw) {
@@ -170,7 +171,7 @@
   }
 
   function currentStep() {
-    return state.history[state.history.length - 1] || 'name';
+    return state.history[state.history.length - 1] || 'pay';
   }
 
   function cameFromReview() {
@@ -192,7 +193,10 @@
       panel.hidden = panel.dataset.orderStep !== step;
     });
     const back = $('[data-order-prev]');
-    const hideBack = step === 'name' || step === 'received';
+    const hideBack = step === 'pay' || step === 'thanks' || step === 'received';
+    const dialog = $('.order-step-dialog', modal());
+    dialog?.setAttribute('aria-labelledby', step === 'pay' ? 'order-pay-title' : 'order-step-title');
+    if (dialog) dialog.scrollTop = 0;
     if (back) back.hidden = hideBack;
     setError('');
   }
@@ -208,14 +212,111 @@
     if (address2Input) address2Input.value = draft.address2 || '';
     if (directInput) directInput.value = draft.requestDirect || '';
     updateAddressPreview(draft);
-    updatePhoneGreeting(draft.customerName || '');
+    updateThanksMessage(draft.customerName || '');
     updateRequestChoices(draft);
     updateReview(draft);
+    updatePaySummary();
   }
 
-  function updatePhoneGreeting(name) {
-    const greeting = $('[data-order-phone-greeting]');
-    if (greeting) greeting.textContent = name ? `감사합니다, ${name} 고객님!` : '감사합니다.';
+  function updatePaySummary() {
+    const product = state.product;
+    const thumb = $('[data-order-pay-thumb]');
+    const name = $('[data-order-pay-name]');
+    const note = $('[data-order-pay-note]');
+    if (thumb) {
+      thumb.src = product?.thumbnail || '';
+      thumb.alt = product?.name || '';
+      thumb.hidden = !product?.thumbnail;
+    }
+    if (name) name.textContent = [product?.name, product?.nameNote].filter(Boolean).join(' ');
+    if (note) note.textContent = state.option?.label || '상품 선택 후 주문';
+  }
+
+  function updateThanksMessage(name) {
+    const message = $('[data-order-thanks-message]');
+    if (message) message.textContent = name ? `감사합니다, ${name} 고객님!` : '감사합니다.';
+  }
+
+  function clearThanksTimer() {
+    if (state.thanksTimer) {
+      window.clearTimeout(state.thanksTimer);
+      state.thanksTimer = null;
+    }
+  }
+
+  function resetThanksMessage() {
+    const dialog = $('.order-step-dialog');
+    const thanks = $('[data-order-step="thanks"]');
+    const phone = $('[data-order-step="phone"]');
+    const back = $('[data-order-prev]');
+    const message = $('[data-order-thanks-message]');
+    dialog?.classList.remove('is-crossfading');
+    thanks?.classList.remove('is-crossfade-out');
+    phone?.classList.remove('is-crossfade-in');
+    back?.classList.remove('is-crossfade-in');
+    message?.classList.remove('is-visible', 'is-shimmer');
+  }
+
+  function beginPhoneCrossfade(next, dialog, thanks, phone, back, message) {
+    dialog?.classList.add('is-crossfading');
+    if (phone) phone.hidden = false;
+    if (back) back.hidden = false;
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        thanks?.classList.add('is-crossfade-out');
+        phone?.classList.add('is-crossfade-in');
+        back?.classList.add('is-crossfade-in');
+      });
+    });
+
+    state.thanksTimer = window.setTimeout(() => {
+      state.thanksTimer = null;
+      if (thanks) thanks.hidden = true;
+      dialog?.classList.remove('is-crossfading');
+      thanks?.classList.remove('is-crossfade-out');
+      phone?.classList.remove('is-crossfade-in');
+      back?.classList.remove('is-crossfade-in');
+      message?.classList.remove('is-visible', 'is-shimmer');
+      next();
+    }, 980);
+  }
+
+  function showThanksThen(next) {
+    clearThanksTimer();
+    resetThanksMessage();
+    updateThanksMessage(readDraft().customerName || '');
+    showStep('thanks');
+
+    const dialog = $('.order-step-dialog');
+    const thanks = $('[data-order-step="thanks"]');
+    const phone = $('[data-order-step="phone"]');
+    const back = $('[data-order-prev]');
+    const message = $('[data-order-thanks-message]');
+
+    window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        message?.classList.add('is-visible');
+      });
+    });
+
+    state.thanksTimer = window.setTimeout(() => {
+      message?.classList.add('is-shimmer');
+
+      state.thanksTimer = window.setTimeout(() => {
+        if (cameFromReview()) {
+          message?.classList.remove('is-visible', 'is-shimmer');
+          state.thanksTimer = window.setTimeout(() => {
+            state.thanksTimer = null;
+            resetThanksMessage();
+            next();
+          }, 450);
+          return;
+        }
+
+        beginPhoneCrossfade(next, dialog, thanks, phone, back, message);
+      }, 2000);
+    }, 1050);
   }
 
   function updateAddressPreview(draft = readDraft()) {
@@ -232,6 +333,7 @@
       }
     }
     if (more) more.hidden = !hasAddress;
+    if (!hasAddress) setDetailAddressHighlight(false);
     const confirm = $('[data-order-address-confirm-text]');
     if (confirm) {
       confirm.textContent = [
@@ -298,9 +400,12 @@
 
   function focusStep(step) {
     const map = {
+      pay: '[data-order-pay="bank"]',
       name: '[data-order-name-input]',
       phone: '[data-order-phone-input]',
-      address: '[data-order-address-search]',
+      address: readDraft().address1
+        ? '[data-order-address2-input]'
+        : '[data-order-address-search]',
       'address-confirm': '[data-order-address-yes]',
       request: '[data-request-option]',
       review: '[data-order-submit]',
@@ -308,7 +413,14 @@
       received: '[data-order-copy-account]',
     };
     const target = $(map[step]);
-    window.setTimeout(() => target?.focus?.(), 0);
+    window.setTimeout(() => {
+      $('.order-step-dialog')?.scrollTo?.(0, 0);
+      target?.focus?.({ preventScroll: true });
+    }, 0);
+  }
+
+  function setDetailAddressHighlight(on) {
+    $('[data-order-address-more]')?.classList.toggle('is-detail-highlight', Boolean(on));
   }
 
   function goTo(step) {
@@ -338,7 +450,10 @@
   }
 
   function closeFlow() {
+    clearThanksTimer();
+    resetThanksMessage();
     closePostcodeLayer();
+    closeCardSoon();
     const root = modal();
     if (!root) return;
     root.classList.remove('is-open');
@@ -350,21 +465,38 @@
   }
 
   function openFlow({ trigger, product, option = null, quantity = 1 }) {
+    clearThanksTimer();
+    resetThanksMessage();
     state.product = product;
     state.option = option;
     state.quantity = Math.max(Number.parseInt(quantity, 10) || 1, 1);
-    state.history = ['name'];
+    state.history = ['pay'];
     state.submitting = false;
     state.returnFocus = trigger instanceof HTMLElement ? trigger : document.activeElement;
     const root = modal();
     if (!root) return;
     fillFields();
-    showStep('name');
+    showStep('pay');
     root.classList.add('is-open');
     root.setAttribute('aria-hidden', 'false');
     document.body.classList.add('no-scroll');
     state.open = true;
-    focusStep('name');
+    focusStep('pay');
+  }
+
+  function closeCardSoon() {
+    const paymentModal = $('[data-payment-modal]');
+    if (!paymentModal?.classList.contains('is-open')) return false;
+    paymentModal.classList.remove('is-open');
+    paymentModal.setAttribute('aria-hidden', 'true');
+    return true;
+  }
+
+  function openCardSoon() {
+    const paymentModal = $('[data-payment-modal]');
+    if (!paymentModal) return;
+    paymentModal.classList.add('is-open');
+    paymentModal.setAttribute('aria-hidden', 'false');
   }
 
   function setPostcodeBlocking(open) {
@@ -413,6 +545,8 @@
       });
       closePostcodeLayer();
       updateAddressPreview();
+      setDetailAddressHighlight(true);
+      $('[data-order-address-search]')?.blur?.();
       window.setTimeout(() => $('[data-order-address2-input]')?.focus(), 0);
     } catch (error) {
       setError('주소를 반영하지 못했습니다. 다시 선택해 주세요.');
@@ -476,6 +610,7 @@
     const existingLayer = $('[data-postcode-layer]');
     if (existingLayer && !existingLayer.hidden) return;
     setError('');
+    setDetailAddressHighlight(false);
     const Postcode = getPostcodeConstructor();
     if (Postcode) {
       launchPostcode(Postcode);
@@ -505,7 +640,7 @@
       return;
     }
     writeDraft({ customerName: name });
-    afterConfirm('phone');
+    showThanksThen(() => afterConfirm('phone'));
   }
 
   function confirmPhone() {
@@ -529,9 +664,11 @@
     }
     if (!draft.address2) {
       setError('상세주소를 입력해 주세요.');
+      setDetailAddressHighlight(true);
       $('[data-order-address2-input]')?.focus();
       return;
     }
+    setDetailAddressHighlight(false);
     goTo('address-confirm');
   }
 
@@ -717,8 +854,16 @@
       button.addEventListener('click', () => goTo(button.dataset.orderEdit));
     });
 
+    document.querySelectorAll('[data-order-pay]').forEach((button) => {
+      button.addEventListener('click', () => {
+        if (button.dataset.orderPay === 'bank') goTo('name');
+        if (button.dataset.orderPay === 'card') openCardSoon();
+      });
+    });
+
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape' || !state.open) return;
+      if (closeCardSoon()) return;
       if ($('[data-postcode-layer]') && !$('[data-postcode-layer]').hidden) {
         closePostcodeLayer();
         return;

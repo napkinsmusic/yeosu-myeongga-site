@@ -557,7 +557,9 @@
     const closePaymentModal = () => {
       paymentModal.classList.remove('is-open');
       paymentModal.setAttribute('aria-hidden', 'true');
-      document.body.classList.remove('no-scroll');
+      if (!document.querySelector('[data-order-step-modal]')?.classList.contains('is-open')) {
+        document.body.classList.remove('no-scroll');
+      }
     };
     document.querySelector('[data-payment-close]').addEventListener('click', closePaymentModal);
     paymentModal.addEventListener('click', (event) => {
