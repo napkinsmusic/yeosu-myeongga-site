@@ -153,7 +153,7 @@
     document.querySelector('[data-cart-total]').textContent = formatWon(productsTotal + shippingFee);
   }
 
-  document.querySelector('[data-cart-checkout]')?.addEventListener('click', () => {
+  document.querySelector('[data-cart-checkout]')?.addEventListener('click', (event) => {
     const lines = resolveLines();
     if (lines.length === 0) return;
     window.YEOSU_PURCHASE.setItems(lines.map((line) => ({
@@ -161,7 +161,20 @@
       optionId: line.optionId,
       quantity: line.quantity,
     })));
-    window.location.href = './checkout.html';
+    if (!window.YEOSU_ORDER_FLOW?.open) {
+      window.location.href = './checkout.html';
+      return;
+    }
+    window.YEOSU_ORDER_FLOW.open({
+      trigger: event.currentTarget,
+      clearCart: true,
+      lines: lines.map((line) => ({
+        product: line.product,
+        option: line.option,
+        quantity: line.quantity,
+        unitPrice: line.unitPrice,
+      })),
+    });
   });
 
   render();

@@ -141,6 +141,8 @@
     product: null,
     option: null,
     quantity: 1,
+    lines: [],
+    clearCartOnSuccess: false,
     submitting: false,
     postcodeListening: false,
     postcodeApplying: false,
@@ -148,6 +150,24 @@
     farewellTimer: null,
     receivedOrder: null,
   };
+
+  function normalizeOrderLine(line) {
+    if (!line?.product) return null;
+    const quantity = Math.max(Number.parseInt(line.quantity, 10) || 1, 1);
+    const option = line.option || null;
+    let unitPrice = line.unitPrice;
+    if (!Number.isFinite(unitPrice)) {
+      unitPrice = option?.price ?? line.product.salePrice ?? line.product.price;
+    }
+    if (line.product.id === 'pollack-roe' && !Number.isFinite(unitPrice)) unitPrice = 35000;
+    if (!Number.isFinite(unitPrice)) return null;
+    return {
+      product: line.product,
+      option,
+      quantity,
+      unitPrice,
+    };
+  }
 
   function decodePostcodePayload(raw) {
     if (typeof raw !== 'string' || !raw.includes('action=')) return null;
@@ -222,7 +242,9 @@
   }
 
   function updatePaySummary() {
-    const product = state.product;
+    const summary = lineSummary();
+    const first = state.lines[0];
+    const product = first?.product || state.product;
     const thumb = $('[data-order-pay-thumb]');
     const name = $('[data-order-pay-name]');
     const note = $('[data-order-pay-note]');
@@ -231,8 +253,17 @@
       thumb.alt = product?.name || '';
       thumb.hidden = !product?.thumbnail;
     }
-    if (name) name.textContent = [product?.name, product?.nameNote].filter(Boolean).join(' ');
-    if (note) note.textContent = state.option?.label || '상품 선택 후 주문';
+    if (name) {
+      const baseName = [product?.name, product?.nameNote].filter(Boolean).join(' ');
+      name.textContent = state.lines.length > 1
+        ? `${baseName} 외 ${state.lines.length - 1}건`
+        : baseName;
+    }
+    if (note) {
+      note.textContent = state.lines.length > 1
+        ? `총 ${summary.quantity}개`
+        : (first?.option?.label || state.option?.label || '상품 선택 후 주문');
+    }
   }
 
   function updateThanksMessage(name) {
@@ -359,19 +390,35 @@
   }
 
   function lineSummary() {
-    const product = state.product;
-    const option = state.option;
-    const quantity = state.quantity;
-    const unitPrice = option?.price ?? product?.salePrice ?? product?.price;
-    const productName = [product?.name, product?.nameNote].filter(Boolean).join(' ');
-    const optionLabel = option?.label || '';
-    const productsTotal = Number.isFinite(unitPrice) ? unitPrice * quantity : 0;
+    const items = (state.lines.length ? state.lines : [{
+      product: state.product,
+      option: state.option,
+      quantity: state.quantity,
+    }].map(normalizeOrderLine).filter(Boolean)).map((line) => {
+      const productName = [line.product?.name, line.product?.nameNote].filter(Boolean).join(' ');
+      const optionLabel = line.option?.label || '';
+      const subtotal = line.unitPrice * line.quantity;
+      return {
+        product: line.product,
+        option: line.option,
+        productName,
+        optionLabel,
+        quantity: line.quantity,
+        unitPrice: line.unitPrice,
+        subtotal,
+        label: optionLabel ? `${productName} / ${optionLabel}` : productName,
+      };
+    });
+    const productsTotal = items.reduce((sum, item) => sum + item.subtotal, 0);
+    const quantity = items.reduce((sum, item) => sum + item.quantity, 0);
     const shippingFee = getShippingFee(productsTotal);
+    const first = items[0];
     return {
-      productName,
-      optionLabel,
+      items,
+      productName: first?.productName || '',
+      optionLabel: first?.optionLabel || '',
       quantity,
-      unitPrice,
+      unitPrice: first?.unitPrice,
       productsTotal,
       shippingFee,
       paidAmount: productsTotal + shippingFee,
@@ -384,9 +431,10 @@
       const element = $(selector);
       if (element) element.textContent = value;
     };
-    set('[data-review-product]', summary.optionLabel
-      ? `${summary.productName} / ${summary.optionLabel}`
-      : summary.productName);
+    set(
+      '[data-review-product]',
+      summary.items.map((item) => `${item.label} · ${item.quantity}개`).join('\n') || '-',
+    );
     set('[data-review-quantity]', `${summary.quantity}개`);
     set('[data-review-name]', draft.customerName || '-');
     set('[data-review-phone]', draft.customerPhone || '-');
@@ -478,14 +526,27 @@
     state.returnFocus = null;
   }
 
-  function openFlow({ trigger, product, option = null, quantity = 1 }) {
+  function openFlow({
+    trigger,
+    product = null,
+    option = null,
+    quantity = 1,
+    lines = null,
+    clearCart = false,
+  } = {}) {
     clearThanksTimer();
     clearFarewellTimer();
     resetThanksMessage();
     resetFarewellMessage();
-    state.product = product;
-    state.option = option;
-    state.quantity = Math.max(Number.parseInt(quantity, 10) || 1, 1);
+    const nextLines = Array.isArray(lines) && lines.length
+      ? lines.map(normalizeOrderLine).filter(Boolean)
+      : [normalizeOrderLine({ product, option, quantity })].filter(Boolean);
+    if (!nextLines.length) return;
+    state.lines = nextLines;
+    state.product = nextLines[0].product;
+    state.option = nextLines[0].option;
+    state.quantity = nextLines[0].quantity;
+    state.clearCartOnSuccess = Boolean(clearCart);
     state.history = ['pay'];
     state.submitting = false;
     state.receivedOrder = null;
@@ -804,9 +865,10 @@
       draft.address1,
       draft.address2,
     ].filter(Boolean).join(' ');
+    const productLines = (summary.items || []).map((item) => `${item.label} · ${item.quantity}개`);
     return [
       ['주문번호', order?.orderNumber || '-'],
-      ['상품', productLabel || '-'],
+      ['상품', productLines.length ? productLines.join('\n') : (productLabel || '-')],
       ['수량', `${summary.quantity}개`],
       ['이름', draft.customerName || order?.customer?.name || '-'],
       ['연락처', draft.customerPhone || order?.customer?.phone || '-'],
@@ -847,10 +909,10 @@
     const measured = [];
     rows.forEach(([label, value]) => {
       ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
-      measured.push({
-        label,
-        valueLines: wrapCanvasText(ctx, value, contentWidth),
-      });
+      const valueLines = String(value || '')
+        .split('\n')
+        .flatMap((part) => wrapCanvasText(ctx, part, contentWidth));
+      measured.push({ label, valueLines });
     });
 
     const titleBlock = 70 + 56;
@@ -989,11 +1051,11 @@
         address2: draft.address2,
         request: draft.shippingRequest || '',
       },
-      items: [{
-        productId: state.product.id,
-        optionId: state.option?.id || null,
-        quantity: state.quantity,
-      }],
+      items: summary.items.map((item) => ({
+        productId: item.product.id,
+        optionId: item.option?.id || null,
+        quantity: item.quantity,
+      })),
     };
 
     let order = null;
@@ -1012,15 +1074,15 @@
         orderStatus: 'PENDING_PAYMENT',
         status: 'PENDING_PAYMENT',
         ...orderInput,
-        items: [{
-          productId: state.product.id,
-          productName: summary.productName,
-          optionId: state.option?.id || '',
-          optionLabel: summary.optionLabel,
-          quantity: state.quantity,
-          price: summary.unitPrice,
-          subtotal: summary.productsTotal,
-        }],
+        items: summary.items.map((item) => ({
+          productId: item.product.id,
+          productName: item.productName,
+          optionId: item.option?.id || '',
+          optionLabel: item.optionLabel,
+          quantity: item.quantity,
+          price: item.unitPrice,
+          subtotal: item.subtotal,
+        })),
         pricing: {
           productsTotal: summary.productsTotal,
           shippingFee: summary.shippingFee,
@@ -1049,6 +1111,7 @@
     $('[data-received-holder]').textContent = bank.accountHolder;
     $('[data-order-copy-message]').textContent = '';
     global.YEOSU_PURCHASE?.clear?.();
+    if (state.clearCartOnSuccess) global.YEOSU_CART?.clear?.();
     goTo('received');
     state.submitting = false;
     if (submitButton) {
@@ -1096,6 +1159,14 @@
     $('[data-order-edit-open]', root)?.addEventListener('click', () => goTo('edit'));
     $('[data-order-copy-account]', root)?.addEventListener('click', copyAccountNumber);
     $('[data-order-save-receipt]', root)?.addEventListener('click', saveOrderReceipt);
+
+    const paymentModal = $('[data-payment-modal]');
+    $('[data-payment-close]')?.addEventListener('click', () => {
+      closeCardSoon();
+    });
+    paymentModal?.addEventListener('click', (event) => {
+      if (event.target === paymentModal) closeCardSoon();
+    });
 
     document.querySelectorAll('[data-request-option]').forEach((button) => {
       button.addEventListener('click', () => selectRequest(button.dataset.requestOption));

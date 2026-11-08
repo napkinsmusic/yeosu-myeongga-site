@@ -1099,6 +1099,7 @@
   line-height: 1.45;
   letter-spacing: -0.03em;
   word-break: keep-all;
+  white-space: pre-line;
 }
 
 .order-review-total dt,
