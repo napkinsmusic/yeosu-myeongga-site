@@ -836,21 +836,29 @@
       logo = null;
     }
 
+    let logoDrawWidth = 0;
+    let logoDrawHeight = 0;
+    if (logo) {
+      logoDrawWidth = Math.min(logo.width * (120 / logo.height), 360);
+      logoDrawHeight = logo.height * (logoDrawWidth / logo.width);
+    }
+
     const rows = receiptRows(order);
     const measured = [];
-    ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
     rows.forEach(([label, value]) => {
-      ctx.font = '700 28px Pretendard, "Noto Sans KR", sans-serif';
-      const valueLines = wrapCanvasText(ctx, value, contentWidth);
-      measured.push({ label, valueLines });
+      ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
+      measured.push({
+        label,
+        valueLines: wrapCanvasText(ctx, value, contentWidth),
+      });
     });
 
-    const logoHeight = logo ? 120 : 0;
-    let height = padding + (logo ? logoHeight + 28 : 0) + 70 + 36;
-    measured.forEach((row) => {
-      height += 34 + row.valueLines.length * 44 + 28;
-    });
-    height += padding;
+    const titleBlock = 70 + 56;
+    const rowBlock = measured.reduce((sum, row) => (
+      sum + 34 + (row.valueLines.length * 44) + 18 + 22
+    ), 0);
+    const logoBlock = logo ? 40 + logoDrawHeight : 0;
+    const height = Math.ceil(padding + titleBlock + rowBlock + logoBlock + padding);
 
     canvas.width = width;
     canvas.height = height;
@@ -859,14 +867,6 @@
     ctx.fillRect(0, 0, width, height);
 
     let y = padding;
-    if (logo) {
-      const ratio = logoHeight / logo.height;
-      const drawWidth = Math.min(logo.width * ratio, 360);
-      const drawHeight = logo.height * (drawWidth / logo.width);
-      ctx.drawImage(logo, (width - drawWidth) / 2, y, drawWidth, drawHeight);
-      y += drawHeight + 28;
-    }
-
     ctx.fillStyle = '#111111';
     ctx.textAlign = 'center';
     ctx.font = '800 54px Pretendard, "Noto Sans KR", sans-serif';
@@ -896,6 +896,17 @@
       ctx.stroke();
       y += 22;
     });
+
+    if (logo) {
+      y += 40;
+      ctx.drawImage(
+        logo,
+        (width - logoDrawWidth) / 2,
+        y,
+        logoDrawWidth,
+        logoDrawHeight,
+      );
+    }
 
     return new Promise((resolve, reject) => {
       canvas.toBlob((blob) => {
