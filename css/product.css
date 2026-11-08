@@ -956,6 +956,12 @@
   font-weight: 600;
 }
 
+.order-step-field input::placeholder {
+  color: #bbb;
+  font-weight: 400;
+  opacity: 1;
+}
+
 .order-step-field input:focus {
   border-color: #111;
 }
