@@ -977,6 +977,59 @@
     });
   }
 
+  function isIosLike() {
+    const ua = navigator.userAgent || '';
+    const touchMac = navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    return touchMac || /iPad|iPhone|iPod/i.test(ua);
+  }
+
+  function ensureReceiptSaveLayer() {
+    let layer = $('[data-receipt-save-layer]');
+    if (layer) return layer;
+    layer = document.createElement('div');
+    layer.className = 'receipt-save-overlay';
+    layer.hidden = true;
+    layer.setAttribute('data-receipt-save-layer', '');
+    layer.innerHTML = `
+      <div class="receipt-save-panel" role="dialog" aria-modal="true" aria-labelledby="receipt-save-title">
+        <p id="receipt-save-title" class="receipt-save-guide">이미지를 길게 눌러<br />사진첩에 저장해 주세요</p>
+        <img alt="여수명가 주문 확인서" data-receipt-save-image />
+        <button type="button" class="purchase-button primary" data-receipt-save-close>닫기</button>
+      </div>
+    `;
+    document.body.append(layer);
+    const close = () => {
+      const image = $('[data-receipt-save-image]', layer);
+      layer.hidden = true;
+      if (image?.src?.startsWith('blob:')) URL.revokeObjectURL(image.src);
+      if (image) image.removeAttribute('src');
+    };
+    $('[data-receipt-save-close]', layer).addEventListener('click', close);
+    layer.addEventListener('click', (event) => {
+      if (event.target === layer) close();
+    });
+    return layer;
+  }
+
+  function showReceiptSavePreview(blob) {
+    const layer = ensureReceiptSaveLayer();
+    const image = $('[data-receipt-save-image]', layer);
+    if (image?.src?.startsWith('blob:')) URL.revokeObjectURL(image.src);
+    image.src = URL.createObjectURL(blob);
+    layer.hidden = false;
+  }
+
+  function downloadReceiptBlob(blob, fileName) {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
   async function saveOrderReceipt() {
     const button = $('[data-order-save-receipt]');
     const note = $('[data-order-receipt-message]');
@@ -992,31 +1045,15 @@
     try {
       const blob = await buildReceiptBlob();
       const fileName = `yeosu-order-${state.receivedOrder.orderNumber || Date.now()}.png`;
-      const file = new File([blob], fileName, { type: 'image/png' });
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({
-          files: [file],
-          title: '여수명가 주문 확인서',
-          text: '여수명가 주문 확인서',
-        });
-        if (note) note.textContent = '공유 화면에서 사진첩 저장을 선택해 주세요.';
+      if (isIosLike()) {
+        showReceiptSavePreview(blob);
+        if (note) note.textContent = '이미지를 길게 눌러 사진첩에 저장해 주세요.';
       } else {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        document.body.append(link);
-        link.click();
-        link.remove();
-        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        downloadReceiptBlob(blob, fileName);
         if (note) note.textContent = '주문 확인서 이미지를 저장했습니다.';
       }
     } catch (error) {
-      if (error?.name === 'AbortError') {
-        if (note) note.textContent = '';
-      } else if (note) {
-        note.textContent = '저장에 실패했습니다. 다시 시도해 주세요.';
-      }
+      if (note) note.textContent = '저장에 실패했습니다. 다시 시도해 주세요.';
     } finally {
       if (button) {
         button.disabled = false;

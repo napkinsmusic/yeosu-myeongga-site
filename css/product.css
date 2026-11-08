@@ -1166,6 +1166,56 @@
   margin-top: 22px;
 }
 
+.receipt-save-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+}
+
+.receipt-save-overlay[hidden] {
+  display: none;
+}
+
+.receipt-save-panel {
+  width: min(100%, 420px);
+  max-height: calc(100dvh - 40px);
+  padding: 22px 18px 18px;
+  overflow: auto;
+  border-radius: 16px;
+  background: #fff;
+}
+
+.receipt-save-guide {
+  margin: 0 0 14px;
+  color: #111;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.45;
+  letter-spacing: -0.04em;
+  text-align: center;
+  word-break: keep-all;
+}
+
+.receipt-save-panel img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 0 14px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  background: #fff;
+  -webkit-touch-callout: default;
+  user-select: none;
+}
+
+.receipt-save-panel .purchase-button {
+  width: 100%;
+}
+
 [data-order-address-more][hidden],
 [data-order-request-direct-field][hidden],
 [data-order-request-direct-submit][hidden] {
