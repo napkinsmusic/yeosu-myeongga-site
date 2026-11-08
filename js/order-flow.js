@@ -146,6 +146,7 @@
     postcodeApplying: false,
     thanksTimer: null,
     farewellTimer: null,
+    receivedOrder: null,
   };
 
   function decodePostcodePayload(raw) {
@@ -477,6 +478,7 @@
     state.quantity = Math.max(Number.parseInt(quantity, 10) || 1, 1);
     state.history = ['pay'];
     state.submitting = false;
+    state.receivedOrder = null;
     state.returnFocus = trigger instanceof HTMLElement ? trigger : document.activeElement;
     const root = modal();
     if (!root) return;
@@ -724,6 +726,8 @@
   function showFarewellMessage() {
     clearFarewellTimer();
     resetFarewellMessage();
+    const receiptNote = $('[data-order-receipt-message]');
+    if (receiptNote) receiptNote.textContent = '';
     goTo('farewell');
     const message = $('[data-order-farewell-message]');
     window.requestAnimationFrame(() => {
@@ -742,6 +746,200 @@
       showFarewellMessage();
     } catch {
       if (note) note.textContent = `복사에 실패했습니다. ${accountNumber}`;
+    }
+  }
+
+  function assetUrl(path) {
+    if (typeof global.YEOSU_ASSET_URL === 'function') return global.YEOSU_ASSET_URL(path);
+    const root = String(global.YEOSU_ASSET_ROOT || './').replace(/\/?$/, '/');
+    return `${root}${String(path).replace(/^\.\//, '')}`;
+  }
+
+  function loadImage(src) {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.onload = () => resolve(image);
+      image.onerror = () => reject(new Error('image'));
+      image.src = src;
+    });
+  }
+
+  function wrapCanvasText(ctx, text, maxWidth) {
+    const value = String(text || '');
+    if (!value) return [''];
+    const lines = [];
+    let current = '';
+    for (const char of value) {
+      const next = current + char;
+      if (ctx.measureText(next).width > maxWidth && current) {
+        lines.push(current);
+        current = char;
+      } else {
+        current = next;
+      }
+    }
+    if (current) lines.push(current);
+    return lines;
+  }
+
+  function receiptRows(order) {
+    const draft = readDraft();
+    const summary = lineSummary();
+    const bank = getBank();
+    const productLabel = summary.optionLabel
+      ? `${summary.productName} / ${summary.optionLabel}`
+      : summary.productName;
+    const address = [
+      draft.zipcode ? `(${draft.zipcode})` : '',
+      draft.address1,
+      draft.address2,
+    ].filter(Boolean).join(' ');
+    return [
+      ['주문번호', order?.orderNumber || '-'],
+      ['상품', productLabel || '-'],
+      ['수량', `${summary.quantity}개`],
+      ['이름', draft.customerName || order?.customer?.name || '-'],
+      ['연락처', draft.customerPhone || order?.customer?.phone || '-'],
+      ['배송지', address || '-'],
+      ['요청사항', requestLabel(draft)],
+      ['배송비', summary.shippingFee === 0 ? '무료배송' : formatWon(summary.shippingFee)],
+      ['입금할 금액', formatWon(order?.pricing?.paidAmount ?? summary.paidAmount)],
+      ['은행명', bank.bankName],
+      ['법인 계좌번호', bank.accountNumber],
+      ['예금주', bank.accountHolder],
+    ];
+  }
+
+  async function buildReceiptBlob() {
+    const order = state.receivedOrder;
+    const width = 1080;
+    const padding = 72;
+    const contentWidth = width - padding * 2;
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) throw new Error('canvas');
+
+    let logo = null;
+    try {
+      logo = await loadImage(assetUrl('./assets/images/logo.png'));
+    } catch {
+      logo = null;
+    }
+
+    const rows = receiptRows(order);
+    const measured = [];
+    ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
+    rows.forEach(([label, value]) => {
+      ctx.font = '700 28px Pretendard, "Noto Sans KR", sans-serif';
+      const valueLines = wrapCanvasText(ctx, value, contentWidth);
+      measured.push({ label, valueLines });
+    });
+
+    const logoHeight = logo ? 120 : 0;
+    let height = padding + (logo ? logoHeight + 28 : 0) + 70 + 36;
+    measured.forEach((row) => {
+      height += 34 + row.valueLines.length * 44 + 28;
+    });
+    height += padding;
+
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, width, height);
+
+    let y = padding;
+    if (logo) {
+      const ratio = logoHeight / logo.height;
+      const drawWidth = Math.min(logo.width * ratio, 360);
+      const drawHeight = logo.height * (drawWidth / logo.width);
+      ctx.drawImage(logo, (width - drawWidth) / 2, y, drawWidth, drawHeight);
+      y += drawHeight + 28;
+    }
+
+    ctx.fillStyle = '#111111';
+    ctx.textAlign = 'center';
+    ctx.font = '800 54px Pretendard, "Noto Sans KR", sans-serif';
+    ctx.fillText('여수명가', width / 2, y + 54);
+    y += 70;
+    ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
+    ctx.fillText('주문 확인서', width / 2, y + 34);
+    y += 56;
+
+    ctx.textAlign = 'left';
+    measured.forEach((row) => {
+      ctx.fillStyle = '#777777';
+      ctx.font = '700 26px Pretendard, "Noto Sans KR", sans-serif';
+      ctx.fillText(row.label, padding, y + 26);
+      y += 34;
+      ctx.fillStyle = '#111111';
+      ctx.font = '700 34px Pretendard, "Noto Sans KR", sans-serif';
+      row.valueLines.forEach((line) => {
+        ctx.fillText(line, padding, y + 34);
+        y += 44;
+      });
+      y += 18;
+      ctx.strokeStyle = '#eeeeee';
+      ctx.beginPath();
+      ctx.moveTo(padding, y);
+      ctx.lineTo(width - padding, y);
+      ctx.stroke();
+      y += 22;
+    });
+
+    return new Promise((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) resolve(blob);
+        else reject(new Error('blob'));
+      }, 'image/png');
+    });
+  }
+
+  async function saveOrderReceipt() {
+    const button = $('[data-order-save-receipt]');
+    const note = $('[data-order-receipt-message]');
+    if (!state.receivedOrder) {
+      if (note) note.textContent = '주문 확인서를 만들 정보가 없습니다.';
+      return;
+    }
+    if (button) {
+      button.disabled = true;
+      button.textContent = '저장 준비 중';
+    }
+    if (note) note.textContent = '';
+    try {
+      const blob = await buildReceiptBlob();
+      const fileName = `yeosu-order-${state.receivedOrder.orderNumber || Date.now()}.png`;
+      const file = new File([blob], fileName, { type: 'image/png' });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: '여수명가 주문 확인서',
+          text: '여수명가 주문 확인서',
+        });
+        if (note) note.textContent = '공유 화면에서 사진첩 저장을 선택해 주세요.';
+      } else {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.append(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        if (note) note.textContent = '주문 확인서 이미지를 저장했습니다.';
+      }
+    } catch (error) {
+      if (error?.name === 'AbortError') {
+        if (note) note.textContent = '';
+      } else if (note) {
+        note.textContent = '저장에 실패했습니다. 다시 시도해 주세요.';
+      }
+    } finally {
+      if (button) {
+        button.disabled = false;
+        button.textContent = '주문 확인서 저장하기';
+      }
     }
   }
 
@@ -822,6 +1020,7 @@
     }
 
     const bank = getBank();
+    state.receivedOrder = order;
     $('[data-received-order-number]').textContent = order.orderNumber;
     $('[data-received-amount]').textContent = formatWon(summary.paidAmount);
     $('[data-received-bank]').textContent = bank.bankName;
@@ -875,6 +1074,7 @@
     $('[data-order-submit]', root)?.addEventListener('click', submitOrder);
     $('[data-order-edit-open]', root)?.addEventListener('click', () => goTo('edit'));
     $('[data-order-copy-account]', root)?.addEventListener('click', copyAccountNumber);
+    $('[data-order-save-receipt]', root)?.addEventListener('click', saveOrderReceipt);
 
     document.querySelectorAll('[data-request-option]').forEach((button) => {
       button.addEventListener('click', () => selectRequest(button.dataset.requestOption));

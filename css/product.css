@@ -1124,8 +1124,10 @@
 
 [data-order-step="farewell"] {
   min-height: 180px;
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   padding: 12px 4px 8px;
 }
 
@@ -1160,6 +1162,10 @@
   font-size: clamp(26px, 7vw, 32px);
   font-weight: 800;
   letter-spacing: -0.05em;
+}
+
+.order-farewell-save {
+  margin-top: 22px;
 }
 
 [data-order-address-more][hidden],
