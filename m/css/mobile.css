@@ -229,13 +229,31 @@
 }
 
 .site-footer {
-  padding: 22px 24px 28px;
+  padding: 22px 84px 28px 24px;
 }
 
 .footer-brand {
   margin-bottom: 8px;
   font-size: 15px;
   font-weight: 500;
+}
+
+.site-footer p {
+  font-size: 12px;
+  line-height: 1.55;
+  word-break: keep-all;
+}
+
+.site-footer .footer-links {
+  margin: 16px 0 0;
+  gap: 0;
+  font-size: 12px;
+}
+
+.site-footer .footer-links a + a::before {
+  content: "|";
+  margin: 0 8px;
+  color: #8d8d8d;
 }
 
 .copyright {
