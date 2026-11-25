@@ -63,11 +63,6 @@
     productInfoLabel.textContent = open ? '상품정보 접기' : '상품정보 더보기';
   });
 
-  if (isPollackRoe) {
-    document.querySelector('[data-standard-product-info]').hidden = true;
-    document.querySelector('[data-pollack-roe-notice]').hidden = false;
-  }
-
   const setText = (selector, value, fallback = '정보 등록 예정') => {
     const element = document.querySelector(selector);
     if (element) element.textContent = value || fallback;
