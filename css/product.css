@@ -221,6 +221,16 @@
   color: #555;
 }
 
+.return-policy p + p {
+  margin-top: 14px;
+}
+
+.return-policy a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .product-short-description {
   margin-bottom: 6px;
 }
