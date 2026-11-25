@@ -710,6 +710,11 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   padding: 72px max(6cqw, 24px);
 }
 
+.location-copy h2,
+.location-copy p {
+  word-break: keep-all;
+}
+
 .location-copy p {
   margin: 22px 0;
 }
