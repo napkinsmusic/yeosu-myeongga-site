@@ -166,6 +166,18 @@ body.postcode-open {
   background: #fff;
 }
 
+@media (min-width: 761px) {
+  .postcode-overlay {
+    display: flex;
+    justify-content: center;
+    background: rgba(17, 17, 17, 0.45);
+  }
+
+  .postcode-panel {
+    width: min(400px, 100%);
+  }
+}
+
 .postcode-toolbar {
   display: flex;
   align-items: center;

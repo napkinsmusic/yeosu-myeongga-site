@@ -14,7 +14,7 @@
     shippingNotice: '3,000원 (7만원 이상 무료 · 제주 +2,000원)',
 
     bankName: '기업은행',
-    bankAccountNumber: '000-0000-0000-00',
+    bankAccountNumber: '193-121204-04-015',
     bankAccountHolder: '(주)전남산업콘텐츠연구원',
   });
 })(window);
