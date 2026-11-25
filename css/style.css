@@ -238,23 +238,24 @@ body:not(.subpage):not(.error-page) .brand-logo img {
 
 .certificate-gallery {
   display: grid;
-  gap: clamp(28px, 4cqw, 56px);
-  padding: clamp(64px, 8cqw, 128px) 24px;
+  gap: clamp(28px, 3vw, 56px);
+  width: min(calc(100% - clamp(28px, 4vw, 80px)), var(--max));
+  margin: 0 auto;
+  padding: clamp(48px, 6vw, 128px) 0;
   background: #fff;
 }
 
 .certificate-row {
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: clamp(8px, 2cqw, 32px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: end;
+  gap: clamp(12px, 1.6vw, 32px);
+  width: 100%;
 }
 
 .certificate-row img {
-  flex: 1 1 0;
-  min-width: 0;
-  max-width: 480px;
-  width: auto;
+  width: 100%;
+  max-width: none;
   height: auto;
   object-fit: contain;
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
