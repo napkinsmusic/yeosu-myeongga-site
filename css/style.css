@@ -756,13 +756,7 @@ body:not(.subpage):not(.error-page) .brand-logo img {
   display: flex;
   flex-wrap: wrap;
   gap: 16px 26px;
-  margin: 38px 0 64px;
-}
-
-.copyright {
-  padding-top: 26px;
-  border-top: 1px solid #303030;
-  font-size: 12px;
+  margin: 38px 0 0;
 }
 
 .site-messages {
