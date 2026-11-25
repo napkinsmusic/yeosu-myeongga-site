@@ -38,9 +38,40 @@
   border-top: 1px solid var(--line);
 }
 
-.legal-contact a {
+.legal-page a {
   text-decoration: underline;
   text-underline-offset: 3px;
+}
+
+.legal-table {
+  width: 100%;
+  margin: 16px 0 8px;
+  border-collapse: collapse;
+}
+
+.legal-table th,
+.legal-table td {
+  padding: 12px 14px;
+  border-top: 1px solid var(--line);
+  color: #222;
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: left;
+  vertical-align: top;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+.legal-table thead th {
+  border-top: 0;
+  border-bottom: 1px solid #111;
+  font-weight: 700;
+}
+
+.legal-table tbody th {
+  width: 42%;
+  font-weight: 600;
 }
 
 .footer-links a[aria-current="page"] {
@@ -78,7 +109,14 @@
   }
 
   .legal-page p,
-  .legal-page li {
+  .legal-page li,
+  .legal-table th,
+  .legal-table td {
     font-size: 15px;
+  }
+
+  .legal-table th,
+  .legal-table td {
+    padding: 10px 8px;
   }
 }
