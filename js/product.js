@@ -111,7 +111,6 @@
     '3,000원 (7만원 이상 무료 · 제주 +2,000원)',
   );
   setText('[data-product-manufacturer]', product.manufacturer);
-  setText('[data-product-storage]', product.storageMethod);
 
   const priceContainer = document.querySelector('[data-product-price]');
   const optionField = document.querySelector('[data-product-options]');
@@ -457,7 +456,7 @@
   const stockMessage = document.querySelector('[data-stock-message]');
   const mobilePurchaseBar = document.querySelector('[data-mobile-purchase]');
   const kakaoFab = document.querySelector('.kakao-fab');
-  const storageSection = document.querySelector('[data-storage-section]');
+  const detailsSection = document.querySelector('.product-details');
 
   mobilePurchaseBar.hidden = false;
   mobilePurchaseBar.setAttribute('aria-hidden', 'true');
@@ -469,14 +468,14 @@
     if (kakaoFab) kakaoFab.setAttribute('aria-hidden', visible ? 'false' : 'true');
   };
 
-  if (storageSection && 'IntersectionObserver' in window) {
+  if (detailsSection && 'IntersectionObserver' in window) {
     const updatePurchaseBar = ([entry]) => {
-      const reachedStorage =
+      const reachedDetails =
         entry.isIntersecting || entry.boundingClientRect.top < 0;
-      setPurchaseBarVisible(reachedStorage);
+      setPurchaseBarVisible(reachedDetails);
     };
     const observer = new IntersectionObserver(updatePurchaseBar, { threshold: 0 });
-    observer.observe(storageSection);
+    observer.observe(detailsSection);
   } else {
     setPurchaseBarVisible(true);
   }
