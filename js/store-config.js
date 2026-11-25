@@ -11,7 +11,7 @@
 
     shippingFreeFrom: 70000,
     shippingFee: 3000,
-    shippingNotice: '3,000원 | 7만원 이상 구매 시 무료',
+    shippingNotice: '3,000원 (7만원 이상 무료 · 제주 +2,000원)',
 
     bankName: '기업은행',
     bankAccountNumber: '000-0000-0000-00',

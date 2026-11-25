@@ -66,7 +66,6 @@
   if (isPollackRoe) {
     document.querySelector('[data-standard-product-info]').hidden = true;
     document.querySelector('[data-pollack-roe-notice]').hidden = false;
-    document.querySelector('[data-pollack-roe-shipping-method]').hidden = false;
   }
 
   const setText = (selector, value, fallback = '정보 등록 예정') => {
@@ -105,11 +104,11 @@
   }
   const shippingNotice =
     shopConfig.shippingNotice ||
-    '3,000원 | 7만원 이상 구매 시 무료';
+    '3,000원 (7만원 이상 무료 · 제주 +2,000원)';
   setText(
     '[data-product-shipping]',
     shippingNotice,
-    '3,000원 | 7만원 이상 구매 시 무료',
+    '3,000원 (7만원 이상 무료 · 제주 +2,000원)',
   );
   setText('[data-product-manufacturer]', product.manufacturer);
   setText('[data-product-storage]', product.storageMethod);
