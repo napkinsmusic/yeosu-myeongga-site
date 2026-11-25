@@ -554,7 +554,9 @@
         document.body.classList.remove('no-scroll');
       }
     };
-    document.querySelector('[data-payment-close]').addEventListener('click', closePaymentModal);
+    document.querySelectorAll('[data-payment-close]').forEach((button) => {
+      button.addEventListener('click', closePaymentModal);
+    });
     paymentModal.addEventListener('click', (event) => {
       if (event.target === paymentModal) closePaymentModal();
     });

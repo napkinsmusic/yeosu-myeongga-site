@@ -1226,8 +1226,14 @@
     $('[data-order-save-receipt]', root)?.addEventListener('click', saveOrderReceipt);
 
     const paymentModal = $('[data-payment-modal]');
-    $('[data-payment-close]')?.addEventListener('click', () => {
+    document.querySelectorAll('[data-payment-close]').forEach((button) => {
+      button.addEventListener('click', () => {
+        closeCardSoon();
+      });
+    });
+    $('[data-payment-bank]')?.addEventListener('click', () => {
       closeCardSoon();
+      goTo('name');
     });
     paymentModal?.addEventListener('click', (event) => {
       if (event.target === paymentModal) closeCardSoon();
