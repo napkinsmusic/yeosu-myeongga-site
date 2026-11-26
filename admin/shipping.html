@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>배송관리 | 여수명가</title>
+  <link rel="stylesheet" href="../css/admin.css" />
+  <link rel="stylesheet" href="../css/admin-shipping.css" />
+</head>
+<body class="admin-page">
+  <div class="admin-auth-loading" data-admin-loading><p>관리자 권한을 확인하고 있습니다.</p></div>
+
+  <div class="admin-layout" data-admin-content hidden>
+    <aside class="admin-sidebar" data-admin-sidebar>
+      <div class="admin-sidebar-head">
+        <a href="./index.html">여수명가</a>
+        <button type="button" aria-label="관리 메뉴 닫기" data-admin-menu-close>×</button>
+      </div>
+      <p class="admin-sidebar-label">ADMIN</p>
+      <nav aria-label="관리자 메뉴">
+        <a href="./index.html">대시보드</a>
+        <a href="./orders.html">주문관리</a>
+        <a href="./products.html">상품관리</a>
+        <a href="./inventory.html">재고관리</a>
+        <a class="is-active" href="./shipping.html">배송관리</a>
+        <a href="./customers.html" data-future-menu>고객관리</a>
+        <a href="./sales.html">매출통계</a>
+        <a href="./settings.html" data-future-menu>설정</a>
+      </nav>
+      <button class="admin-logout" type="button" data-admin-logout>로그아웃</button>
+    </aside>
+
+    <div class="admin-sidebar-backdrop" data-admin-sidebar-backdrop></div>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <button class="admin-menu-button" type="button" aria-label="관리 메뉴 열기" data-admin-menu-open>☰</button>
+        <div><strong>관리자</strong><span data-admin-email></span></div>
+      </header>
+
+      <section class="admin-content">
+        <div class="admin-page-heading">
+          <p class="admin-kicker">SHIPPING</p>
+          <h1>배송관리</h1>
+        </div>
+        <p class="shipping-draft-note">결제완료·배송준비 주문을 골라 출고 주문서를 인쇄하거나, 롯데택배 대량접수에 맞춘 초안 파일로 저장합니다. 택배사 화면의 최신 양식과 열이 다르면 그 순서에 맞게 고치면 됩니다.</p>
+
+        <form class="shipping-filter" data-shipping-filter>
+          <div class="shipping-quick-periods">
+            <button type="button" data-shipping-period="today">오늘</button>
+            <button type="button" data-shipping-period="yesterday">어제</button>
+            <button type="button" data-shipping-period="7">최근 7일</button>
+          </div>
+          <div class="shipping-date-range">
+            <input type="date" name="startDate" aria-label="조회 시작일" required />
+            <span>~</span>
+            <input type="date" name="endDate" aria-label="조회 종료일" required />
+            <button type="submit">조회</button>
+          </div>
+          <label class="shipping-check">
+            <input type="checkbox" data-include-pending />
+            입금 대기 포함
+          </label>
+          <label class="shipping-check">
+            <input type="checkbox" data-include-test checked />
+            TEST 주문 포함
+          </label>
+        </form>
+
+        <div class="shipping-toolbar">
+          <p>출고 대상 <strong data-shipping-count>0</strong>건 · 선택 <strong data-shipping-selected>0</strong>건</p>
+          <div>
+            <button type="button" data-download-sheet>택배 접수 파일</button>
+            <button type="button" data-print-sheet>주문서 인쇄</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="shipping-table">
+            <thead>
+              <tr>
+                <th><input type="checkbox" aria-label="전체 주문 선택" data-shipping-select-all checked /></th>
+                <th>주문번호</th>
+                <th>상태</th>
+                <th>받는 사람</th>
+                <th>연락처</th>
+                <th>주소</th>
+                <th>상품</th>
+                <th>요청사항</th>
+              </tr>
+            </thead>
+            <tbody data-shipping-rows></tbody>
+          </table>
+          <div class="shipping-empty" data-shipping-empty hidden>출고할 주문이 없습니다.</div>
+          <div class="shipping-loading" data-shipping-loading>주문을 불러오고 있습니다.</div>
+        </div>
+        <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
+      </section>
+    </main>
+  </div>
+
+  <section class="shipping-print-sheet" data-print-root></section>
+
+  <script src="../js/firebase/firebase-config.js"></script>
+  <script src="../js/services/auth-service.js"></script>
+  <script src="../js/services/admin-order-service.js"></script>
+  <script src="../js/admin.js"></script>
+  <script src="../js/admin-shipping.js"></script>
+</body>
+</html>

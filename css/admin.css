@@ -251,6 +251,17 @@ input {
   margin-bottom: 32px;
 }
 
+.admin-draft-pointer {
+  margin: -16px 0 28px;
+  color: var(--admin-muted);
+}
+
+.admin-draft-pointer a {
+  color: #111;
+  font-weight: 700;
+  text-decoration: underline;
+}
+
 .admin-notice {
   padding: 18px 20px;
   border: 1px solid #c9d6ca;

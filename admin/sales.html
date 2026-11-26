@@ -23,7 +23,7 @@
         <a href="./orders.html">주문관리</a>
         <a href="./products.html">상품관리</a>
         <a href="./inventory.html">재고관리</a>
-        <a href="./shipping.html" data-future-menu>배송관리</a>
+        <a href="./shipping.html">배송관리</a>
         <a href="./customers.html" data-future-menu>고객관리</a>
         <a class="is-active" href="./sales.html">매출통계</a>
         <a href="./settings.html" data-future-menu>설정</a>
@@ -45,11 +45,15 @@
           <h1>매출통계</h1>
         </div>
 
+        <p class="sales-draft-note">들어온 주문을 기간별로 묶고, 아래 기준값으로 수수료와 순이익을 계산합니다. 기준값은 이 브라우저에 저장됩니다.</p>
+
         <form class="sales-period-filter" data-sales-filter>
           <div class="sales-quick-periods">
             <button type="button" data-sales-period="today">오늘</button>
             <button type="button" data-sales-period="week">이번주</button>
             <button type="button" data-sales-period="month">이번달</button>
+            <button type="button" data-sales-period="quarter">이번 분기</button>
+            <button type="button" data-sales-period="year">올해</button>
           </div>
           <div class="sales-date-range">
             <input type="date" name="startDate" aria-label="통계 시작일" required />
@@ -57,6 +61,10 @@
             <input type="date" name="endDate" aria-label="통계 종료일" required />
             <button type="submit">조회</button>
           </div>
+          <label class="sales-test-toggle">
+            <input type="checkbox" data-include-test checked />
+            TEST 주문 포함
+          </label>
         </form>
 
         <div class="sales-metrics">
@@ -66,25 +74,92 @@
           <article><span>평균 주문금액</span><strong data-sales-average>—</strong></article>
         </div>
 
-        <div class="test-sales-notice" data-test-sales hidden>
-          <strong>TEST 주문은 실제 매출에서 제외됩니다.</strong>
-          <span data-test-sales-summary></span>
+        <div class="sales-metrics sales-profit-metrics">
+          <article><span>수수료</span><strong data-sales-fee>—</strong></article>
+          <article><span>상품원가</span><strong data-sales-cost>—</strong></article>
+          <article><span>배송원가</span><strong data-sales-courier>—</strong></article>
+          <article><span>순이익</span><strong data-sales-profit>—</strong></article>
+          <article><span>입금 대기</span><strong data-sales-pending>—</strong></article>
         </div>
 
+        <div class="test-sales-notice" data-test-sales hidden>
+          <strong data-test-sales-title>TEST 주문이 포함되어 있습니다.</strong>
+          <span data-test-sales-summary></span>
+        </div>
+        <p class="sales-profit-warning" data-sales-cost-warning hidden></p>
+
+        <section class="sales-panel finance-panel">
+          <div class="sales-panel-head">
+            <h2>월별 손익</h2>
+            <label class="finance-range">
+              <span>기간</span>
+              <select data-finance-range aria-label="월별 손익 기간">
+                <option value="3">최근 3개월</option>
+                <option value="6" selected>최근 6개월</option>
+                <option value="12">최근 1년</option>
+              </select>
+            </label>
+          </div>
+          <div class="finance-legend">
+            <span><i class="is-income"></i>매출</span>
+            <span><i class="is-outcome"></i>지출</span>
+            <span><i class="is-net"></i>순이익</span>
+          </div>
+          <div class="finance-chart" data-finance-chart></div>
+          <p class="sales-empty" data-finance-empty hidden>이 기간의 결제 주문이 없습니다.</p>
+          <p class="sales-help" data-finance-note>지출은 상품원가, 수수료, 택배 원가를 더한 금액입니다. 막대는 월마다 세로로 나란히 섭니다.</p>
+        </section>
+
         <section class="sales-panel">
-          <h2>일별 매출</h2>
+          <div class="sales-panel-head">
+            <h2 data-sales-chart-title>일별 매출</h2>
+            <div class="sales-group-by">
+              <button type="button" data-sales-group="day" class="is-active">일별</button>
+              <button type="button" data-sales-group="week">주별</button>
+              <button type="button" data-sales-group="month">월별</button>
+              <button type="button" data-sales-group="quarter">분기별</button>
+              <button type="button" data-sales-group="year">연별</button>
+            </div>
+          </div>
           <div class="sales-chart" data-sales-chart></div>
+          <p class="sales-empty" data-sales-chart-empty hidden>해당 기간의 결제 주문이 없습니다.</p>
         </section>
 
         <section class="sales-panel">
           <h2>상품별 매출</h2>
           <div class="sales-table-wrap">
             <table class="sales-product-table">
-              <thead><tr><th>상품명</th><th>판매수량</th><th>매출</th></tr></thead>
+              <thead><tr><th>상품명</th><th>판매수량</th><th>매출</th><th>원가</th><th>매출이익</th></tr></thead>
               <tbody data-sales-products-table></tbody>
             </table>
             <div class="sales-empty" data-sales-products-empty hidden>해당 기간의 판매 데이터가 없습니다.</div>
           </div>
+        </section>
+
+        <section class="sales-panel">
+          <h2>손익 기준값</h2>
+          <p class="sales-help">순이익 = 총매출 − 상품원가 − 수수료 − 배송원가. 고객이 낸 배송비는 총매출에 들어 있고, 여기서 빼는 배송원가는 택배사에 실제로 내는 금액입니다.</p>
+          <form class="sales-assumptions" data-sales-assumptions>
+            <label>
+              <span>카드 수수료 (%)</span>
+              <input name="cardFeePercent" type="number" min="0" max="100" step="0.1" />
+            </label>
+            <label>
+              <span>계좌이체 수수료 (건당)</span>
+              <input name="bankFeePerOrder" type="number" min="0" step="1" />
+            </label>
+            <label>
+              <span>택배 원가 (건당)</span>
+              <input name="courierCostPerOrder" type="number" min="0" step="1" />
+            </label>
+          </form>
+          <div class="sales-table-wrap">
+            <table class="sales-product-table">
+              <thead><tr><th>상품명</th><th>판매가</th><th>원가</th></tr></thead>
+              <tbody data-sales-cost-table></tbody>
+            </table>
+          </div>
+          <p class="sales-help">원가를 비워 두면 그 상품은 0원으로 계산되고, 순이익 옆에 표시가 붙습니다. 상품관리의 원가 칸은 서버 함수를 다시 배포한 뒤 저장됩니다. 그 전에는 이 표의 값이 이 브라우저에만 남습니다.</p>
         </section>
 
         <p class="admin-toast" role="status" aria-live="polite" data-admin-message></p>
@@ -94,7 +169,8 @@
 
   <script src="../js/firebase/firebase-config.js"></script>
   <script src="../js/services/auth-service.js"></script>
-  <script src="../js/services/admin-sales-service.js"></script>
+  <script src="../js/services/admin-order-service.js"></script>
+  <script src="../js/services/admin-product-service.js"></script>
   <script src="../js/admin.js"></script>
   <script src="../js/admin-sales.js"></script>
 </body>

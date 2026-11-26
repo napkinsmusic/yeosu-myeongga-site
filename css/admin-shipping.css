@@ -1,0 +1,173 @@
+.shipping-draft-note {
+  margin: -12px 0 18px;
+  color: var(--admin-muted);
+  font-size: 13px;
+}
+
+.shipping-filter,
+.shipping-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 18px 20px;
+  border: 1px solid var(--admin-line);
+  background: #fff;
+}
+
+.shipping-toolbar {
+  margin-top: 14px;
+  border-bottom: 0;
+}
+
+.shipping-quick-periods,
+.shipping-date-range,
+.shipping-toolbar div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shipping-filter button,
+.shipping-filter input[type="date"],
+.shipping-toolbar button {
+  min-height: 38px;
+  padding: 8px 12px;
+  border: 1px solid #ccd0d5;
+  background: #fff;
+}
+
+.shipping-filter button,
+.shipping-toolbar button {
+  cursor: pointer;
+}
+
+.shipping-quick-periods button.is-active,
+.shipping-toolbar button {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.shipping-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--admin-muted);
+  font-size: 13px;
+}
+
+.shipping-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.shipping-table th,
+.shipping-table td {
+  padding: 12px 10px;
+  border-top: 1px solid var(--admin-line);
+  text-align: left;
+  vertical-align: top;
+}
+
+.shipping-table th {
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.shipping-empty,
+.shipping-loading {
+  padding: 48px 20px;
+  background: #fff;
+  color: var(--admin-muted);
+  text-align: center;
+}
+
+.shipping-tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  border: 1px solid #e0bd86;
+  background: #fff8ec;
+  color: #7e4d12;
+  font-size: 11px;
+}
+
+.shipping-print-sheet {
+  display: none;
+}
+
+.shipping-slip {
+  padding: 28px 8px 36px;
+  page-break-after: always;
+}
+
+.shipping-slip header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #111;
+}
+
+.shipping-slip header p,
+.shipping-slip header span {
+  margin: 0;
+  color: #555;
+  font-size: 12px;
+}
+
+.shipping-slip h2 {
+  margin: 4px 0 0;
+  font-size: 22px;
+}
+
+.shipping-slip dl {
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 8px 12px;
+  margin: 0 0 18px;
+}
+
+.shipping-slip dt {
+  color: #666;
+}
+
+.shipping-slip dd {
+  margin: 0;
+}
+
+.shipping-slip table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.shipping-slip th,
+.shipping-slip td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
+
+@media print {
+  body.is-printing-orders .admin-layout,
+  body.is-printing-orders .admin-auth-loading {
+    display: none !important;
+  }
+
+  body.is-printing-orders .shipping-print-sheet {
+    display: block;
+  }
+}
+
+@media (max-width: 900px) {
+  .shipping-filter,
+  .shipping-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

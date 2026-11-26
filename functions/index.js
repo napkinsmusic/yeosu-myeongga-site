@@ -823,6 +823,10 @@ function normalizeProductPayload(data) {
     data.salePrice === null || data.salePrice === undefined || data.salePrice === ''
       ? null
       : requireInteger(data.salePrice, '할인가격');
+  const costPrice =
+    data.costPrice === null || data.costPrice === undefined || data.costPrice === ''
+      ? null
+      : requireInteger(data.costPrice, '상품원가');
   if (salePrice !== null && salePrice > originalPrice) {
     throw new HttpsError('invalid-argument', '할인가격은 정상가격보다 클 수 없습니다.');
   }
@@ -855,6 +859,7 @@ function normalizeProductPayload(data) {
     price: salePrice ?? price,
     originalPrice,
     salePrice,
+    costPrice,
     description: optionalText(data.description, 20000),
     shortDescription: optionalText(data.shortDescription, 500),
     images,

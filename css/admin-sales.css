@@ -1,7 +1,21 @@
+.sales-draft-note,
+.sales-help,
+.sales-profit-warning {
+  margin: 0 0 14px;
+  color: var(--admin-muted);
+  font-size: 13px;
+}
+
+.sales-profit-warning {
+  margin-top: 12px;
+  color: #7e4d12;
+}
+
 .sales-period-filter {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: 18px;
   padding: 18px 20px;
   border: 1px solid var(--admin-line);
@@ -16,7 +30,7 @@
 }
 
 .sales-period-filter button,
-.sales-period-filter input {
+.sales-period-filter input[type="date"] {
   min-height: 40px;
   padding: 8px 12px;
   border: 1px solid #ccd0d5;
@@ -34,11 +48,24 @@
   color: #fff;
 }
 
+.sales-test-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--admin-muted);
+  font-size: 13px;
+}
+
 .sales-metrics {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
   margin-top: 18px;
+}
+
+.sales-profit-metrics {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  margin-top: 14px;
 }
 
 .sales-metrics article {
@@ -79,8 +106,191 @@
 }
 
 .sales-panel h2 {
-  margin: 0 0 24px;
+  margin: 0;
   font-size: 17px;
+}
+
+.sales-panel-head,
+.sales-group-by,
+.sales-assumptions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sales-panel-head {
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.sales-group-by button,
+.sales-cost-input,
+.sales-assumptions input {
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #ccd0d5;
+  background: #fff;
+}
+
+.sales-group-by button {
+  cursor: pointer;
+}
+
+.sales-group-by button.is-active {
+  border-color: #111;
+  background: #111;
+  color: #fff;
+}
+
+.sales-assumptions {
+  flex-wrap: wrap;
+  margin: 16px 0 20px;
+}
+
+.sales-assumptions label {
+  display: grid;
+  gap: 6px;
+  min-width: 180px;
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.sales-cost-input {
+  width: 140px;
+}
+
+.finance-range {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.finance-range select {
+  min-height: 38px;
+  padding: 7px 12px;
+  border: 1px solid #ccd0d5;
+  background: #fff;
+  font: inherit;
+  color: #111;
+}
+
+.finance-legend {
+  display: flex;
+  gap: 16px;
+  margin: -8px 0 18px;
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.finance-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.finance-legend i,
+.finance-bar.is-income,
+.finance-legend .is-income {
+  background: #1c1917;
+}
+
+.finance-legend i {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+.finance-legend .is-outcome {
+  background: #a8a29e;
+}
+
+.finance-legend .is-net {
+  background: #1f7a4d;
+}
+
+.finance-chart {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+  margin-top: 22px;
+}
+
+.finance-scale {
+  position: relative;
+  height: 240px;
+}
+
+.finance-scale span {
+  position: absolute;
+  right: 0;
+  color: var(--admin-muted);
+  font-size: 11px;
+  line-height: 1;
+  transform: translateY(-100%);
+  white-space: nowrap;
+}
+
+.finance-groups {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.finance-month {
+  flex: 1 0 64px;
+  display: grid;
+  justify-items: center;
+  gap: 8px;
+}
+
+.finance-track {
+  position: relative;
+  width: 100%;
+  height: 240px;
+}
+
+.finance-baseline {
+  position: absolute;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  height: 1px;
+  background: #d1d5db;
+}
+
+.finance-bar {
+  position: absolute;
+  width: 14px;
+  border-radius: 3px 3px 0 0;
+}
+
+.finance-bar.is-income {
+  left: calc(50% - 25px);
+}
+
+.finance-bar.is-outcome {
+  left: calc(50% - 7px);
+  background: #a8a29e;
+}
+
+.finance-bar.is-net {
+  left: calc(50% + 11px);
+  background: #1f7a4d;
+}
+
+.finance-bar.is-negative {
+  border-radius: 0 0 3px 3px;
+  background: #b42318;
+}
+
+.finance-month-label {
+  color: var(--admin-muted);
+  font-size: 12px;
+  white-space: nowrap;
 }
 
 .sales-chart {
@@ -156,8 +366,14 @@
     flex-direction: column;
   }
 
-  .sales-metrics {
+  .sales-metrics,
+  .sales-profit-metrics {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sales-panel-head {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }
 
@@ -171,7 +387,12 @@
     grid-column: 1 / -1;
   }
 
-  .sales-metrics {
+  .sales-metrics,
+  .sales-profit-metrics {
     grid-template-columns: 1fr;
+  }
+
+  .sales-group-by {
+    flex-wrap: wrap;
   }
 }
